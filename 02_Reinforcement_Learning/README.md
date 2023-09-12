@@ -176,7 +176,7 @@
     - DOWN to s11
     - Can not move left to s6 because it is a wall.
 
-    ![s7](https://static.javatpoint.com/tutorial/reinforcement-learning/images/reinforcement-learning-bellman-equation2.png)
+  ![s7](https://static.javatpoint.com/tutorial/reinforcement-learning/images/reinforcement-learning-bellman-equation2.png)
 
   - The `max` in Bellman equation denote the most optimal path among all posible action that agent can take at a given state. Among all these actions available the maximum value for that state is the UP action. So, the Bellman equation will be:
 
@@ -204,61 +204,55 @@ There are two types of reinforcement learning methods.
 
 - It can be more effective than the positive reinforcement depending on situation and behavior, but it provides reinforcement only to meet minimum behavior.
 
-## **6. Learning Models of Reinforcement**
+## **7. Markov Decision Process**
 
-- There are two important learning models in reinforcement learning:
-  - Markov Decision Process
-  - Q learning
+### **7.1 What is Markov Decision Process?**
 
-### **6.1 Markov Decision Process**
+- Markov decision process (MDP) is a discrete time stochastic control process. It provides a mathematical framework for modeling decision making in situations where outcomes are partly random and partly under the control of a decision maker.
 
-- The following parameters are used to get a solution:
-  - Set of actions - A
-  - Set of states - S
-  - Reward - R
-  - Policy - n
-  - Value - V
+- MDP is used to describe the environment for the RL, and almost all the RL problem can be formalized using MDP.
 
-- The mathematical approach for mapping a solution in reinforcement Learning is recon as a Markov Decision Process or (MDP).
+- MDP contains a tuple of four elements (S, A, Pa, Ra):
+  - A set of finite states (S)
+  - A set of finite actions (A)
+  - A set of rewards (Ra) received after transitioning from state s to s' with action a
+  - A transition probability matrix (Pa) which is the probability of transitioning from state s to s' with action a
 
-![Markov](https://www.guru99.com/images/1/082319_0514_Reinforceme3.png)
+![MDP](https://static.javatpoint.com/tutorial/reinforcement-learning/images/reinforcement-learning-markov-decision-process.png)
 
-### **6.2 Q learning**
+### **7.2 Markov Property**
 
-- Q learning is a value-based method of supplying information to inform which action an agent should take.
+- Markov Property define that "If the agent is present in the current state S1, performs an action a1 and move to the state s2, then the state transition from s1 to s2 only depends on the current state and future action and states do not depend on past actions, rewards, or states."
 
-- Let’s understand this method by the following example:
-  - There are five rooms in a building which are connected by doors.
-  - Each room is numbered 0 to 4
-  - The outside of the building can be one big outside area (5)
-  - Doors number 1 and 4 lead into the building from room 5
+- In other words, the next state depends only on the current state and action, not on the sequence of events that preceded it. Hence, MDP is an RL problem that satisfies the Markov property.
 
-![Q](https://www.guru99.com/images/1/082319_0514_Reinforceme4.png)
+- Mathematically, the Markov property is defined as:
 
-- Next, you need to associate a reward value to each door:
-  - Doors which lead directly to the goal have a reward of 100
-  - Doors which is not directly connected to the target room gives zero reward
-  - As doors are two-way, and two arrows are assigned for each room
-  - Every arrow in the above image contains an instant reward value
+  ```math
+  P[S(t+1) | S(t)] = P[S(t+1) | S(t), S(t-1), S(t-2), ... , S(0)] = P[S(t+1) | S(t)]
+  ```
 
-- Explanation:
-  - In this image, you can view that room represents a state
-  - Agent’s movement from one room to another represents an action
-  - In the below-given image, a state is described as a node, while the arrows show the action.
+- For example in a Chess game, the players only focus on the current state and do not need to remember past actions or states.
 
-![Q](https://www.guru99.com/images/1/082319_0514_Reinforceme5.png)
+- Why is this important? The Markov property allows MDP problems to be fully characterized by the transition function between states rather than the full history. This greatly simplifies solving for optimal policies.
 
-- For example, an agent traverse from room number 2 to 5
-  - Initial state = state 2
-  - State 2-> state 3
-  - State 3 -> state (2,1,4)
-  - State 4-> state (0,5,3)
-  - State 1-> state (5,3)
-  - State 0-> state 4
+- It also means that at any point, we have all the information we need to make decisions based just on the current state. The past is irrelevant for determining the next action.
 
+## **8. Reinforcement Learning Algorithms**
 
+### **8.1 Q-Learning**
 
-## **8. Reinforcement Learning vs Supervised Learning**
+-
+
+### **8.2 State Action Reward State action (SARSA)**
+
+- 
+
+### **8.3 Deep Q Network (DQN)**
+
+- 
+
+## **9. Reinforcement Learning vs Supervised Learning**
 
 |Parameters|Reinforcement Learning|Supervised Learning|
 |-|-|-|
@@ -268,7 +262,7 @@ There are two types of reinforcement learning methods.
 |Best suited|Supports and work better in AI, where human interaction is prevalent.|It is mostly operated with an interactive software system or applications.|
 |Example|Chess game|Object recognition|
 
-## **9. Why use and When not to use Reinforcement Learning?**
+## **10. Why use and When to use Reinforcement Learning?**
 
 - Here are prime reasons for using Reinforcement Learning:
   - It helps you to find which situation needs an action
@@ -287,4 +281,4 @@ There are two types of reinforcement learning methods.
   - Too much Reinforcement may lead to an overload of states which can diminish the results.
   - Realistic environments can be non-stationary.
 
-## **10. Implementing Reinforcement Learning**
+## **11. Implementing Reinforcement Learning**
