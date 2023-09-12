@@ -2,81 +2,207 @@
 
 ## **1. What is Reinforcement Learning?**
 
-- Reinforcement Learning is a type of Machine Learning, and thereby also a branch of Artificial Intelligence. It allows machines and software agents to automatically determine the ideal behavior within a specific context, in order to maximize its performance. Simple reward feedback is required for the agent to learn its behavior; this is known as the reinforcement signal.
+- Reinforcement learning is a machine learning training method based on rewarding desired behaviors and punishing undesired ones.
+- In general, a reinforcement learning agent -- the entity being trained -- is able to perceive and interpret its environment, take actions and learn through trial and error.
 
-## **2. Components of Reinforcement Learning**
+- Key Features of Reinforcement Learning:
+  - The agent is not instructed about the environment and what actions need to be taken.
+  - RL based on the hit and trial process.
+  - The agent takes the next action and changes states according to the feedback of the previous action.
+  - Feedback is always delayed, not instantaneous
+  - The environment is stochastic, and the agent needs to explore it to reach to get the maximum positive rewards.
 
-Some important components in RL:
+## **2. Terms used in Reinforcement Learning**
 
-- Agent: It is an assumed entity which performs actions in an environment to gain some reward.
-- Environment (e): A scenario that an agent has to face.
-- Reward (R): An immediate return given to an agent when he or she performs specific action or task.
-- State (s): State refers to the current situation returned by the environment.
-- Policy (π): It is a strategy which applies by the agent to decide the next action based on the current state.
-- Value (V): It is expected long-term return with discount, as compared to the short-term reward.
-- Value Function: It specifies the value of a state that is the total amount of reward. It is an agent which should be expected beginning from that state.
-- Model of the environment: This mimics the behavior of the environment. It helps you to make inferences to be made and also determine how the environment will behave.
-- Model based methods: It is a method for solving reinforcement learning problems which use model-based methods.
-- Q value or action value (Q): Q value is quite similar to value. The only difference between the two is that it takes an additional parameter as a current action.
+- **Agent**: An entity that can perceive/explore the environment and act upon it.
+
+- **Environment (e)**: A scenario that an agent is present or surrounded by. In RL, we assume the stochastic environment, which means it is random in nature.
+
+- **Action**: the set of all possible moves that an agent can take in a given situation within the environment.
+
+- **State (s)** is a situation returned by the environment after each action taken by the agent.
+
+- **Reward (R)**: A feedback returned to the agent from the environment to evaluate the action of the agent.
+
+- **Policy (π)**: It is a strategy which applies by the agent to decide the next action based on the current state.
+
+- **Value (V)**:  It is expected long-term retuned with the discount factor and opposite to the short-term reward.
+
+- **Q value or action value (Q)**: It is mostly similar to the value, but it takes one additional parameter as a current action (a).
   
 ![RL](https://www.guru99.com/images/1/082319_0514_Reinforceme1.png)
 
-## **3. How does Reinforcement Learning work?**
+## **3. Approaches to implement Reinforcement Learning**
 
-- Consider the scenario of teaching new tricks to your cat:
-  - As cat doesn’t understand English or any other human language, we can’t tell her directly what to do. Instead, we follow a different strategy.
-  - We emulate a situation, and the cat tries to respond in many different ways. If the cat’s response is the desired way, we will give her fish.
-  - Now whenever the cat is exposed to the same situation, the cat executes a similar action with even more enthusiastically in expectation of getting more reward(food).
-  - That’s like learning that cat gets from “what to do” from positive experiences.
-  - At the same time, the cat also learns what not do when faced with negative experiences.
+### **3.1 Value-Based**
 
-- Example of Reinforcement Learning
+- The value-based approach is about to find the optimal value function, which is the maximum value at a state under any policy. Therefore, the agent expects the long-term return at any state(s) under policy π.
 
-![RL](https://www.guru99.com/images/1/082319_0514_Reinforceme2.png)
-
-- In this case:
-  - Your cat is an agent that is exposed to the environment. In this case, it is your house. An example of a state could be your cat sitting, and you use a specific word in for cat to walk.
-  - Our agent reacts by performing an action transition from one “state” to another “state.”
-  - For example, your cat goes from sitting to walking.
-  - The reaction of an agent is an action, and the policy is a method of selecting an action given a state in expectation of better outcomes.
-  - After the transition, they may get a reward or penalty in return.
-
-## **4. Reinforcement Learning Algorithms**
-
-There are three approaches to implement a Reinforcement Learning algorithm.
-
-### **4.1 Value-Based**
-
-- In a value-based Reinforcement Learning method, you should try to maximize a value function V(s). In this method, the agent is expecting a long-term return of the current states under policy π.
-
-### **4.2 Policy-based**
+### **3.2 Policy-based**
 
 - In a policy-based RL method, you try to come up with such a policy that the action performed in every state helps you to gain maximum reward in the future.
 - Two types of policy-based methods are:
   - Deterministic: For any state, the same action is produced by the policy π.
-  - Stochastic: Every action has a certain probability, which is determined by the following equation. Stochastic Policy:
+  - Stochastic: Every action has a certain probability, which is determined by the following equation.
 
   ```math
   π(a|s) = P[A=a|S=s]
   ```
 
-### **4.3 Model-Based**
+### **3.3 Model-Based**
 
 - In this Reinforcement Learning method, you need to create a virtual model for each environment. The agent learns to perform in that specific environment.
 
-## **5. Types of Reinforcement Learning**
+## **4. Elements of Reinforcement Learning**
+
+- There are four main elements of Reinforcement Learning:
+  - Policy
+  - Reward function
+  - Value function
+  - Model
+
+### **4.1 Policy**
+
+- A policy can be defined as a way how an agent behaves at a given time. It maps the perceived states of the environment to the actions taken on those states. A policy is the core element of the RL as it alone can define the behavior of the agent. In some cases, it may be a simple function or a lookup table, whereas, for other cases, it may involve general computation as a search process. It could be deterministic or a stochastic policy:
+
+- For deterministic policy:
+
+  ```math
+  a = π(s)
+  ```
+
+- For stochastic policy:
+
+  ```math
+  π(a|s) = P[A=a|S=s]
+  ```
+
+### **4.2 Reward function**
+
+- The goal of reinforcement learning is defined by the reward signal. At each state, the environment sends an immediate signal to the learning agent, and this signal is known as a reward signal. These rewards are given according to the good and bad actions taken by the agent.
+
+- The agent's main objective is to maximize the total number of rewards for good actions. The reward signal can change the policy, such as if an action selected by the agent leads to low reward, then the policy may change to select other actions in the future.
+
+### **4.3 Value function**
+
+- The value function gives information about how good the situation and action are and how much reward an agent can expect. A reward indicates the immediate signal for each good and bad action, whereas a value function specifies the good state and action for the future.
+
+- The value function depends on the reward as, without reward, there could be no value. The goal of estimating values is to achieve more rewards.
+
+### **4.4 Model**
+
+- The models mimics the behavior of the environment. With the help of the model, one can make inferences about how the environment will behave. Such as, if a state and an action are given, then a model can predict the next state and reward.
+
+- The model is used for planning, which means it provides a way to take a course of action by considering all future situations before actually experiencing those situations. The approaches for solving the RL problems with the help of the model are termed as the model-based approach. Comparatively, an approach without using a model is called a model-free approach.
+
+## **5. How does Reinforcement Learning work?**
+
+### **5.1 Example**
+
+- Consider the following problems:
+
+![prob](https://static.javatpoint.com/tutorial/reinforcement-learning/images/reinforcement-learning-works.png)
+
+- In the above problem, the agent is at s9 and it have to get to s4 for the diamond.
+  - The agent can move in four directions: up, down, left, and right.
+  - If it reach s4 (diamond), then it will get a reward of +1.
+  - If it reach s8 (fire), then it will get a reward of -1.
+  - The agent can take any path to reach the diamond, but it needs to make it in minimum steps.
+
+- Initally, the agent will explore the enviroment and try to reach the diamond. As soon as it reachs the diamond, it will backtrace its step back and mark values of all states which leads towards the goal as V = 1.
+
+![Without Bellman](https://media.geeksforgeeks.org/wp-content/uploads/20210914203249/Env11.png)
+
+- But, if we changr the start position, the agent can not find the path to the goal. So, we need to use the Bellman equation to solve this problem.
+
+![Problem](https://static.javatpoint.com/tutorial/reinforcement-learning/images/reinforcement-learning-works3.png)
+
+### **5.2 The Bellman Equation**
+
+- The Bellman equation is used to calculate the utility of the states. The utility of the state is the expected long-term return of the state, also known as the value of the state.
+
+- The Bellman equation is given below:
+
+  ```math
+  V(s) = max[R(s) + γV(s')]
+  ```
+
+- The key-elements used in Bellman equation are:
+  - The agent perform an action "a" in the state "s" and moves to the next state "s'".
+  - The agent receives a reward "R(s)".
+  - V(s): It is the value of the state s.
+  - V(s'): It is the value of the next state.
+  - γ: It is the discount factor, which determines how much the agent cares about rewards in the distant future relative to those in the immediate future. It has a value between 0 and 1. Lower value encourages short–term rewards while higher value promises long-term reward
+
+- With the above example, we start from block s3 (next to the target). Assume discount factor γ = 0.9.
+
+  - For s3 block. Here V(s') = 0 because no further state to move. So, the Bellman equation will be:
+
+    ```math
+    V(s3) = max[R(s3) + γV(s')] = max[1 + 0.9 * 0] = 1
+    ```
+
+  - For s2 block. Here V(s') = 1 because it can move to s3. So, the Bellman equation will be:
+
+    ```math
+    V(s2) = max[R(s2) + γV(s')] = max[0 + 0.9 * 1] = 0.9
+    ```
+
+  - For s1 block. Here V(s') = 0.9 because it can move to s2. So, the Bellman equation will be:
+
+    ```math
+    V(s1) = max[R(s1) + γV(s')] = max[0 + 0.9 * 0.9] = 0.81
+    ```
+  
+  - For s5 block. Here V(s') = 0.81 because it can move to s1. So, the Bellman equation will be:
+
+    ```math
+    V(s5) = max[R(s5) + γV(s')] = max[0 + 0.9 * 0.81] = 0.73
+    ```
+
+  - For s9 block. Here V(s') = 0.73 because it can move to s5. So, the Bellman equation will be:
+
+    ```math
+    V(s9) = max[R(s9) + γV(s')] = max[0 + 0.9 * 0.73] = 0.66
+    ```
+  
+  - s9 block is also the start block of agent.
+
+  ![Results](https://static.javatpoint.com/tutorial/reinforcement-learning/images/reinforcement-learning-bellman-equation.png)
+
+  - Now we move to s7 block, here the agent have 3 option:
+    - UP to s3
+    - LEFT to s8 (fire)
+    - DOWN to s11
+    - Can not move left to s6 because it is a wall.
+
+    ![s7](https://static.javatpoint.com/tutorial/reinforcement-learning/images/reinforcement-learning-bellman-equation2.png)
+
+  - The `max` in Bellman equation denote the most optimal path among all posible action that agent can take at a given state. Among all these actions available the maximum value for that state is the UP action. So, the Bellman equation will be:
+
+    ```math
+    V(s7) = max[R(s7) + γV(s')] = max[0 + 0.9 * 1] = 0.9
+    ```
+
+  - Continue the process, we got the final result. The agent will take the path with maximum value by following the increasing value of the states based on the Bellman equation.
+
+  ![Results](https://static.javatpoint.com/tutorial/reinforcement-learning/images/reinforcement-learning-bellman-equation3.png)
+
+## **6. Types of Reinforcement Learning**
 
 There are two types of reinforcement learning methods.
 
-### **5.1 Positive**
+### **6.1 Positive**
 
-- It is defined as an event, that occurs because of specific behavior. It increases the strength and the frequency of the behavior and impacts positively on the action taken by the agent.
+- The positive reinforcement learning means adding something to increase the tendency that expected behavior would occur again. It impacts positively on the behavior of the agent and increases the strength of the behavior.
 
 - This type of Reinforcement helps you to maximize performance and sustain change for a more extended period. However, too much Reinforcement may lead to over-optimization of state, which can affect the results.
 
-### **5.2 Negative**
+### **6.2 Negative**
 
-- Negative Reinforcement is defined as strengthening of behavior that occurs because of a negative condition which should have stopped or avoided. It helps you to define the minimum stand of performance. However, the drawback of this method is that it provides enough to meet up the minimum behavior.
+- The negative reinforcement learning is opposite to the positive reinforcement as it increases the tendency that the specific behavior will occur again by avoiding the negative condition.
+
+- It can be more effective than the positive reinforcement depending on situation and behavior, but it provides reinforcement only to meet minimum behavior.
 
 ## **6. Learning Models of Reinforcement**
 
@@ -130,14 +256,7 @@ There are two types of reinforcement learning methods.
   - State 1-> state (5,3)
   - State 0-> state 4
 
-## **7. Characteristics of Reinforcement Learning**
 
-- Here are important characteristics of reinforcement learning
-  - There is no supervisor, only a real number or reward signal
-  - Sequential decision making
-  - Time plays a crucial role in Reinforcement problems
-  - Feedback is always delayed, not instantaneous
-  - Agent’s actions determine the subsequent data it receives
 
 ## **8. Reinforcement Learning vs Supervised Learning**
 
