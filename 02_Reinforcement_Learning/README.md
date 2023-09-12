@@ -95,7 +95,7 @@
 
 - The model is used for planning, which means it provides a way to take a course of action by considering all future situations before actually experiencing those situations. The approaches for solving the RL problems with the help of the model are termed as the model-based approach. Comparatively, an approach without using a model is called a model-free approach.
 
-## **5. How does Reinforcement Learning work?**
+## **5. Bellman Equation**
 
 ### **5.1 Example**
 
@@ -242,15 +242,80 @@ There are two types of reinforcement learning methods.
 
 ### **8.1 Q-Learning**
 
--
+#### **8.1.1 What is Q-Learning?**
 
-### **8.2 State Action Reward State action (SARSA)**
+- Q-learning is an Off policy RL algorithm, which is used for the temporal difference Learning. The temporal difference learning methods are the way of comparing temporally successive predictions.
 
-- 
+- It learns the value function Q (S, a), which means how good to take action "a" at a particular state "s."
 
-### **8.3 Deep Q Network (DQN)**
+- The below flowchart explains the working of Q- learning:
 
-- 
+![Q-Learning](https://static.javatpoint.com/tutorial/reinforcement-learning/images/reinforcement-learning-algorithms.png)
+
+#### **8.1.2 Describe a example**
+
+- Let’s say that a robot has to cross a maze and reach the end point. There are mines, and the robot can only move one tile at a time. If the robot steps onto a mine, the robot is dead. The robot has to reach the end point in the shortest time possible.
+
+- The scoring/reward system is as below:
+  - The robot loses 1 point at each step. So that the robot have to take the shortest path and reaches the goal as fast as possible.
+  - If the robot steps on a mine, the point loss is 100 and the game ends.
+  - If the robot gets power ⚡️, it gains 1 point.
+  - If the robot reaches the end goal, the robot gets 100 points.
+
+- The problem is how do we train a robot to reach the end goal with the shortest path without stepping on a mine?
+
+![Prob](https://cdn-media-1.freecodecamp.org/images/3JXI06jyHegMS1Yx8rhIq64gkYwSTM7ZhD25)
+
+#### **8.1.2 Q-Table**
+
+- Basically, the Q-table is a look-up matrix where we have a row for each state and a column for each action. The value in the cell represents the reward for taking the action in the state.
+
+- In Q-Table, the columns represent the actions, and the rows represent the states. Each Q-table score will be the maximum expected future reward that the robot will get if it takes that action at that state. This is an iterative process, as we need to improve the Q-Table at each iteration.
+
+![QTable](https://codelearn.io/Media/Default/Users/th1475369_40gmail_2Ecom/tictactoe_dqn/pic7.png)
+
+- For the above example:
+
+![Example](https://cdn-media-1.freecodecamp.org/images/AjVvggEquHgsnMN8i4N35AMfx53vZtELEL-l)
+
+#### **8.1.3 Mathematics: the Q-Learning algorithm**
+
+- The main process of Q-Learning algorithmn:
+
+![Q](https://cdn-media-1.freecodecamp.org/images/oQPHTmuB6tz7CVy3L05K1NlBmS6L8MUkgOud)
+
+- Step 1: Initialize the Q-table with zeros.
+  - There are n columns, where n is number of actions. There are m rows, where m is number of states.
+  - We will initialise the values at 0.
+
+![Step 1](https://cdn-media-1.freecodecamp.org/images/TQ9Wy3guJHUecTf0YA5AuQgB9yVIohgLXKIn)
+
+- Steps 2 and 3: choose and perform an action.
+  - This combination of steps is done for an undefined amount of time. This means that this step runs until the time we stop the training, or the training loop stops as defined in the code.
+
+  - In each step, we choose an action using the epsilon-greedy policy. This means that we either choose the action with the highest Q-value for the current state, or we choose a random action.
+
+  - Epsilon-greedy policy based on epsilon value (in range 0 to 1). Then, we choose a random number between 0 and 1. If the random number is less than epsilon, we choose a random action. If the random number is greater than epsilon, we choose the action with the highest Q-value for the current state. So, if the epsilon value is 0.1, then 10% of the time, we will choose a random action, and 90% of the time, we will choose the action with the highest Q-value for the current state. It is a trade-off between exploration and exploitation. With higher epsilon values, we explore more, and with lower epsilon values, we exploit more.
+  - In practice, we start with a higher epsilon value and then gradually decrease it as the training progresses. This is because we want to explore more in the beginning and exploit more towards the end of the training.
+
+- Steps 4 and 5: evaluate.
+  - Now we have taken an action and observed an outcome and reward.We need to update the function Q(s,a).
+
+  ![Update formula](https://cdn-media-1.freecodecamp.org/images/TnN7ys7VGKoDszzv3WDnr5H8txOj3KKQ0G8o)
+
+  - Discount rate is a value between 0 and 1. It is used to balance immediate and future reward. Very low discount factor signifies importance to immediate reward while high discount signifies importance to future reward. The true value of the discount factor is application dependent but the optimal value of the discount factor lies between 0.2 to 0.8.
+
+- We will repeat this again and again until the learning is stopped. In this way the Q-Table will be updated.
+
+### **8.2 Deep Q Network (DQN)**
+
+- As the name suggests, DQN is a Q-learning using Neural networks.
+
+- The limitation of Q-learning is that if the state is too large, it will take a lot of space to store the Q-table and slow down the learning time because during the learning process the Q-table is accessed continuously.
+
+- To solve such an issue, we can use a DQN algorithm. Where, instead of defining a Q-table, neural network approximates the Q-values for each action and state.
+
+![Q vs DQN](https://codelearn.io/Media/Default/Users/th1475369_40gmail_2Ecom/tictactoe_dqn/pic10.png)
 
 ## **9. Reinforcement Learning vs Supervised Learning**
 
