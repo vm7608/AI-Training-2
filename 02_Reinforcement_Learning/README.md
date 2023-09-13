@@ -3,33 +3,33 @@
 ## **1. What is Reinforcement Learning?**
 
 - Reinforcement learning is a machine learning training method based on rewarding desired behaviors and punishing undesired ones.
+
 - In general, a reinforcement learning agent -- the entity being trained -- is able to perceive and interpret its environment, take actions and learn through trial and error.
 
 - Key Features of Reinforcement Learning:
-  - The agent is not instructed about the environment and what actions need to be taken.
-  - RL based on the hit and trial process.
-  - The agent takes the next action and changes states according to the feedback of the previous action.
-  - Feedback is always delayed, not instantaneous
+  - The agent is not instructed about the environment and what actions need to be taken. It takes the next action and changes states according to the feedback of the previous action.
+  - RL based on the trial and error process.
+  - Feedback is always delayed, not instantaneous.
   - The environment is stochastic, and the agent needs to explore it to reach to get the maximum positive rewards.
 
 ## **2. Terms used in Reinforcement Learning**
 
 - **Agent**: An entity that can perceive/explore the environment and act upon it.
 
-- **Environment (e)**: A scenario that an agent is present or surrounded by. In RL, we assume the stochastic environment, which means it is random in nature.
+- **Environment (E)**: A scenario that an agent is present or surrounded by. In RL, we assume the stochastic environment, which means it is random in nature.
 
-- **Action**: the set of all possible moves that an agent can take in a given situation within the environment.
+- **Action (A)**: the set of all possible moves that an agent can take in a given situation within the environment.
 
-- **State (s)** is a situation returned by the environment after each action taken by the agent.
+- **State (S)** is a situation returned by the environment after each action taken by the agent.
 
 - **Reward (R)**: A feedback returned to the agent from the environment to evaluate the action of the agent.
 
 - **Policy (π)**: It is a strategy which applies by the agent to decide the next action based on the current state.
 
-- **Value (V)**:  It is expected long-term retuned with the discount factor and opposite to the short-term reward.
+- **Value (V)**:  It is expected long-term retuned with the discount factor.
 
-- **Q value or action value (Q)**: It is mostly similar to the value, but it takes one additional parameter as a current action (a).
-  
+- **Q value or action value (Q)**: It is mostly similar to the value, but it takes an extra parameter, which is the current action.
+
 ![RL](https://www.guru99.com/images/1/082319_0514_Reinforceme1.png)
 
 ## **3. Approaches to implement Reinforcement Learning**
@@ -63,29 +63,38 @@
 
 ### **4.1 Policy**
 
-- A policy can be defined as a way how an agent behaves at a given time. It maps the perceived states of the environment to the actions taken on those states. A policy is the core element of the RL as it alone can define the behavior of the agent. In some cases, it may be a simple function or a lookup table, whereas, for other cases, it may involve general computation as a search process. It could be deterministic or a stochastic policy:
+- A policy can be defined as a way how an agent behaves at a given time.
+  - It maps the perceived states of the environment to the actions taken on those states.
+  - A policy is the core element of the RL as it defines the behavior of the agent. In some cases, it may be a simple function or a lookup table which involve general computation as a search process.
+  
+- It could be deterministic or a stochastic policy:
+  - For deterministic policy:
 
-- For deterministic policy:
+    ```math
+    a = π(s)
+    ```
 
-  ```math
-  a = π(s)
-  ```
+  - For stochastic policy:
 
-- For stochastic policy:
-
-  ```math
-  π(a|s) = P[A=a|S=s]
-  ```
+    ```math
+    π(a|s) = P[A=a|S=s]
+    ```
 
 ### **4.2 Reward function**
 
-- The goal of reinforcement learning is defined by the reward signal. At each state, the environment sends an immediate signal to the learning agent, and this signal is known as a reward signal. These rewards are given according to the good and bad actions taken by the agent.
+- The goal of RL is defined by the reward signal:
+  - At each state, the environment sends an immediate signal to the learning agent, and this signal is known as a reward signal.
+  - These rewards are given according to the good and bad actions taken by the agent.
 
-- The agent's main objective is to maximize the total number of rewards for good actions. The reward signal can change the policy, such as if an action selected by the agent leads to low reward, then the policy may change to select other actions in the future.
+- The agent's main objective is to maximize the total number of rewards for good actions.
+
+- The reward signal can change the policy, such as if an action selected by the agent leads to low reward, then the policy may change to select other actions in the future.
 
 ### **4.3 Value function**
 
-- The value function gives information about how good the situation and action are and how much reward an agent can expect. A reward indicates the immediate signal for each good and bad action, whereas a value function specifies the good state and action for the future.
+- The value function gives information about how good the situation and action are and how much reward an agent can expect.
+
+- A reward indicates the immediate signal for each good and bad action, whereas a value function specifies the good state and action for the future.
 
 - The value function depends on the reward as, without reward, there could be no value. The goal of estimating values is to achieve more rewards.
 
@@ -93,7 +102,9 @@
 
 - The models mimics the behavior of the environment. With the help of the model, one can make inferences about how the environment will behave. Such as, if a state and an action are given, then a model can predict the next state and reward.
 
-- The model is used for planning, which means it provides a way to take a course of action by considering all future situations before actually experiencing those situations. The approaches for solving the RL problems with the help of the model are termed as the model-based approach. Comparatively, an approach without using a model is called a model-free approach.
+- The model is used for planning, which means it provides a way to take a course of action by considering all future situations before actually experiencing those situations.
+
+- The approaches for solving the RL problems with the help of the model are termed as the model-based approach. Comparatively, an approach without using a model is called a model-free approach.
 
 ## **5. Bellman Equation**
 
@@ -113,7 +124,7 @@
 
 ![Without Bellman](https://media.geeksforgeeks.org/wp-content/uploads/20210914203249/Env11.png)
 
-- But, if we changr the start position, the agent can not find the path to the goal. So, we need to use the Bellman equation to solve this problem.
+- But, if we change the start position, the agent can not find the path to the goal. So, we need to use the Bellman equation to solve this problem.
 
 ![Problem](https://static.javatpoint.com/tutorial/reinforcement-learning/images/reinforcement-learning-works3.png)
 
@@ -208,7 +219,7 @@ There are two types of reinforcement learning methods.
 
 ### **7.1 What is Markov Decision Process?**
 
-- Markov decision process (MDP) is a discrete time stochastic control process. It provides a mathematical framework for modeling decision making in situations where outcomes are partly random and partly under the control of a decision maker.
+- Markov decision process (MDP) is a control process that provides a mathematical framework for modeling decision making in situations where outcomes are partly random and partly under the control of a decision maker.
 
 - MDP is used to describe the environment for the RL, and almost all the RL problem can be formalized using MDP.
 
@@ -234,9 +245,7 @@ There are two types of reinforcement learning methods.
 
 - For example in a Chess game, the players only focus on the current state and do not need to remember past actions or states.
 
-- Why is this important? The Markov property allows MDP problems to be fully characterized by the transition function between states rather than the full history. This greatly simplifies solving for optimal policies.
-
-- It also means that at any point, we have all the information we need to make decisions based just on the current state. The past is irrelevant for determining the next action.
+- The Markov property allows MDP problems to be fully characterized by the transition function between states rather than the full history which means that at any point, we have all the information we need to make decisions based just on the current state. The past is irrelevant for determining the next action.
 
 ## **8. Reinforcement Learning Algorithms**
 
@@ -244,11 +253,9 @@ There are two types of reinforcement learning methods.
 
 #### **8.1.1 What is Q-Learning?**
 
-- Q-learning is an Off policy RL algorithm, which is used for the temporal difference Learning. The temporal difference learning methods are the way of comparing temporally successive predictions.
+- Q-learning is a model-free reinforcement learning technique used by agents to learn what actions to take under what circumstances. It learns the value function Q (S, a), which means how good to take action "a" at a particular state "s."
 
-- It learns the value function Q (S, a), which means how good to take action "a" at a particular state "s."
-
-- The below flowchart explains the working of Q- learning:
+- The below flowchart explains the working of Q-learning:
 
 ![Q-Learning](https://static.javatpoint.com/tutorial/reinforcement-learning/images/reinforcement-learning-algorithms.png)
 
@@ -293,9 +300,10 @@ There are two types of reinforcement learning methods.
 - Steps 2 and 3: choose and perform an action.
   - This combination of steps is done for an undefined amount of time. This means that this step runs until the time we stop the training, or the training loop stops as defined in the code.
 
-  - In each step, we choose an action using the epsilon-greedy policy. This means that we either choose the action with the highest Q-value for the current state, or we choose a random action.
+  - In each step, we choose an action using the `epsilon-greedy policy`. This means that we either choose the action with the highest Q-value for the current state, or we choose a random action.
 
   - Epsilon-greedy policy based on epsilon value (in range 0 to 1). Then, we choose a random number between 0 and 1. If the random number is less than epsilon, we choose a random action. If the random number is greater than epsilon, we choose the action with the highest Q-value for the current state. So, if the epsilon value is 0.1, then 10% of the time, we will choose a random action, and 90% of the time, we will choose the action with the highest Q-value for the current state. It is a trade-off between exploration and exploitation. With higher epsilon values, we explore more, and with lower epsilon values, we exploit more.
+
   - In practice, we start with a higher epsilon value and then gradually decrease it as the training progresses. This is because we want to explore more in the beginning and exploit more towards the end of the training.
 
 - Steps 4 and 5: evaluate.
@@ -327,23 +335,14 @@ There are two types of reinforcement learning methods.
 |Best suited|Supports and work better in AI, where human interaction is prevalent.|It is mostly operated with an interactive software system or applications.|
 |Example|Chess game|Object recognition|
 
-## **10. Why use and When to use Reinforcement Learning?**
+## **10. Why and When to use Reinforcement Learning?**
 
 - Here are prime reasons for using Reinforcement Learning:
-  - It helps you to find which situation needs an action
-  - Helps you to discover which action yields the highest reward over the longer period.
-  - Reinforcement Learning also provides the learning agent with a reward function.
-  - It also allows it to figure out the best method for obtaining large rewards.
+  - Helps to find which situation needs an action
+  - Helps to discover which action yields the highest reward over the longer period.
+  - Allows to figure out the best method for obtaining large rewards.
 
-- You can’t apply reinforcement learning model is all the situation. Here are some conditions when you should not use reinforcement learning model.
-  - When you have enough data to solve the problem with a supervised learning method
-  - You need to remember that Reinforcement Learning is computing-heavy and time-consuming. in particular when the action space is large.
-
-- Here are the major challenges you will face while doing Reinforcement earning:
-  - Feature/reward design which should be very involved
-  - Parameters may affect the speed of learning.
-  - Realistic environments can have partial observability.
-  - Too much Reinforcement may lead to an overload of states which can diminish the results.
-  - Realistic environments can be non-stationary.
-
-## **11. Implementing Reinforcement Learning**
+- Here are some conditions when you should not use reinforcement learning model.
+  - When we have enough data to solve the problem with a supervised learning method
+  - Reinforcement Learning is computing-heavy and time-consuming. in particular when the action space is large.
+  - When the problem is simple and can be solved with a simple rule-based approach.
