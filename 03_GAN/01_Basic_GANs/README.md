@@ -232,6 +232,10 @@ J(\theta) = - [0 \times log(D(\mathbf x_i)) + (1 - 0) \times log(1 - D(\mathbf x
 
 - This change is inspired by framing the problem from a different perspective, where the generator seeks to maximize the probability of images being real, instead of minimizing the probability of an image being fake.
 
+- So, the backpropagation process will be:
+
+![Backpropagation process](https://miro.medium.com/max/1600/1*M_YipQF_oC6owsU1VVrfhg.jpeg)
+
 ## **3. Applications and challenges of GANs**
 
 - Application of GANs and GANs variants model:
