@@ -89,7 +89,6 @@ P(x|y) = \frac{P(y|x)P(x)}{P(y)}
 
 - It's simply a binary classifier.
 
-
 ![gan](https://images.viblo.asia/27269c25-dc53-4f25-ba16-5c583747156e.png)
 
 ### **2.4. Loss function**
@@ -143,17 +142,17 @@ J(\theta) = -\frac{1}{m} \sum_{i=1}^{m} [y_i log(\hat{p}_i) + (1 - y_i) log(1 - 
   - $`y_i`$ is the label of the input $`\mathbf x_i`$. If $`\mathbf x_i`$ is a real data, then $`y_i = 1`$ and $`\mathbf x_i`$ is a fake data, then $`y_i = 0`$.
 
 - Here, we have 2 cases for each input $`\mathbf x_i`$:
-  - If $`\mathbf x_i`$ is a real data, then $`y_i = 1`$ and $`\hat{p}_i = D(\mathbf x_i)`$. So the loss function is:
+- If $`\mathbf x_i`$ is a real data, then $`y_i = 1`$ and $`\hat{p}_i = D(\mathbf x_i)`$. So the loss function is:
 
-    ```math
-    J(\theta) = - [1  \times  log(D(\mathbf x_i)) + (1 - 1)  \times  log(1 - D(\mathbf x_i))] = -log(D(\mathbf x_i))
-    ```
+```math
+J(\theta) = - [1  \times  log(D(\mathbf x_i)) + (1 - 1)  \times  log(1 - D(\mathbf x_i))] = -log(D(\mathbf x_i))
+```
+  
+- If $`\mathbf x_i`$ is a fake data, then $`y_i = 0`$ and we have we have $`\mathbf x_i = G(z_i)`$ so $`\hat{p}_i = D(G(z_i))`$. So the loss function is:
 
-  - If $`\mathbf x_i`$ is a fake data, then $`y_i = 0`$ and we have we have $`\mathbf x_i = G(z_i)`$ so $`\hat{p}_i = D(G(z_i))`$. So the loss function is:
-
-    ```math
-    J(\theta) = - [0 \times log(D(\mathbf x_i)) + (1 - 0) \times log(1 - D(\mathbf x_i))] = -log(1 - D(G(z_i)))
-    ```
+```math
+J(\theta) = - [0 \times log(D(\mathbf x_i)) + (1 - 0) \times log(1 - D(\mathbf x_i))] = -log(1 - D(G(z_i)))
+```
 
 - The objective of Discriminator is to maximize $`D(\mathbf x)`$ and minimize $`D(G(\mathbf z))`$ by minimizing the following objective function:
 
@@ -231,7 +230,7 @@ J(\theta) = -\frac{1}{m} \sum_{i=1}^{m} [y_i log(\hat{p}_i) + (1 - y_i) log(1 - 
 
 ![G](https://images.viblo.asia/f42d99cb-3f73-428a-ac3b-1df7fbdba49d.jpeg)
 
-- This change is inspired by framing the problem from a different perspective, where the generator seeks to maximize the probability of images being real, instead of minimizing the probability of an image being fake. 
+- This change is inspired by framing the problem from a different perspective, where the generator seeks to maximize the probability of images being real, instead of minimizing the probability of an image being fake.
 
 ## **3. Applications and challenges of GANs**
 
