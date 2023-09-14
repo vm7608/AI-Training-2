@@ -89,6 +89,9 @@ P(x|y) = \frac{P(y|x)P(x)}{P(y)}
 
 - It's simply a binary classifier.
 
+
+![gan](https://images.viblo.asia/27269c25-dc53-4f25-ba16-5c583747156e.png)
+
 ### **2.4. Loss function**
 
 #### **2.4.1. Review cross entropy loss**
@@ -211,6 +214,24 @@ J(\theta) = -\frac{1}{m} \sum_{i=1}^{m} [y_i log(\hat{p}_i) + (1 - y_i) log(1 - 
 - Note that when train the discriminator, we need to freeze the parameters of generator and vice versa.
 
 - The training process is continued until the discriminator cannot distinguish between real and fake data or we reach the maximum number of epochs.
+
+#### **Generator diminished gradient**
+
+- In training process, we update the discriminator by one step and then update the generator by one step. However, the generator may not be able to learn well if the discriminator is too good. This is because the gradients of the generator will be very small when the discriminator is too good. That means:
+
+```math
+\frac{1}{m}\nabla_{\theta_{G}} \sum_{i=1}^{m} \log (1-D(G(z^{(i)}))) \approx 0
+```
+
+- To solve that problems, we change the objective function that will generator maximizes the log of the discriminator probabilities
+
+```math
+\max_G V(G) = \underbrace{\mathbb{E}_{z \sim p_{z}(z)} [\log (D(G(z)))]}_{\text{log-probability D predicts G(z) is real}}
+```
+
+![G](https://images.viblo.asia/f42d99cb-3f73-428a-ac3b-1df7fbdba49d.jpeg)
+
+- This change is inspired by framing the problem from a different perspective, where the generator seeks to maximize the probability of images being real, instead of minimizing the probability of an image being fake. 
 
 ## **3. Applications and challenges of GANs**
 
