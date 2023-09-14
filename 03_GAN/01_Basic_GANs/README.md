@@ -123,19 +123,54 @@ J(\theta) = -\frac{1}{m} \sum_{i=1}^{m} [y_i log(\hat{p}_i) + (1 - y_i) log(1 - 
 
 - The discriminator is a binary classifier to distinguish if the input $`x`$ is real (from real data) or fake (from the generator).
 
-- Typically, the discriminator outputs a scalar prediction $`o\in\mathbb R`$ for each input $`x`$, such as using a fully connected layer with hidden size 1, and then applies sigmoid function to obtain the predicted probability:
+- Typically, the discriminator outputs a scalar prediction $`o\in\mathbb R`$ for each input $`x`$, by apply sigmoid function to obtain the predicted probability:
 
 ```math
 D(\mathbf x) = \frac{1}{1+e^{-o}}
 ```
 
-- Assume the label y for the true data is 1 and 0 for the fake data. We train the discriminator to minimize the cross-entropy loss, i.e.,
+- Assume the label y for the true data is 1 and 0 for the fake data and we asume that generator G is fixed in this phase. Our objective is to minimize the cross-entropy loss, i.e.,
 
 ```math
-\min_D \{ - y \log D(\mathbf x) - (1-y)\log(1-D(\mathbf x)) \}
+J(\theta) = -\frac{1}{m} \sum_{i=1}^{m} [y_i log(\hat{p}_i) + (1 - y_i) log(1 - \hat{p}_i)]
 ```
 
+- In which:
+  - $`\hat{p}_i = D(\mathbf x_i)`$ is the predicted probability of the discriminator for the input $`\mathbf x_i`$.
+  - $`y_i`$ is the label of the input $`\mathbf x_i`$. If $`\mathbf x_i`$ is a real data, then $`y_i = 1`$ and $`\mathbf x_i`$ is a fake data, then $`y_i = 0`$.
+
+- Here, we have 2 cases for each input $`\mathbf x_i`$:
+  - If $`\mathbf x_i`$ is a real data, then $`y_i = 1`$ and $`\hat{p}_i = D(\mathbf x_i)`$. So the loss function is:
+
+    ```math
+    J(\theta) = - [1  \times  log(D(\mathbf x_i)) + (1 - 1)  \times  log(1 - D(\mathbf x_i))] = -log(D(\mathbf x_i))
+    ```
+
+  - If $`\mathbf x_i`$ is a fake data, then $`y_i = 0`$ and we have we have $`\mathbf x_i = G(z_i)`$ so $`\hat{p}_i = D(G(z_i))`$. So the loss function is:
+
+    ```math
+    J(\theta) = - [0 \times log(D(\mathbf x_i)) + (1 - 0) \times log(1 - D(\mathbf x_i))] = -log(1 - D(G(z_i)))
+    ```
+
+- The objective of Discriminator is to maximize $`D(\mathbf x)`$ and minimize $`D(G(\mathbf z))`$ by minimizing the following objective function:
+
+```math
+\min_{D} V(D) = - \underbrace{\mathbb{E}_{x \sim p_{data}(x)} [\log D(x)]}_{\text{log-probability that D predict x is real}} - \underbrace{\mathbb{E}_{z \sim p_{z}(z)} [\log (1-D(G(z)))]}_{\text{log-probability D predicts G(z) is fake}}
+```
+
+- Inverting the sign, we can maximize the following objective function:
+
+```math
+\max_{D} V(D) = \underbrace{\mathbb{E}_{x \sim p_{data}(x)} [\log D(x)]}_{\text{log-probability that D predict x is real}} + \underbrace{\mathbb{E}_{z \sim p_{z}(z)} [\log (1-D(G(z)))]}_{\text{log-probability D predicts G(z) is fake}}
+```
+
+- In the above equation:
+  - $`E_{x \sim p_{data}(x)}`$ is the expectation of $`x`$ drawn from the real data distribution $`p_{data}(x)`$. In other words, it is the average of $`\log D(x)`$ over all real data $`x`$.
+  - $`E_{z \sim p_{z}(z)}`$ is the expectation of $`z`$ drawn from the noise distribution $`p_{z}(z)`$. In other words, it is the average of $`\log (1-D(G(z)))`$ over all fake data $`G(z)`$. Note that, $`G(z)`$ is the output of the generator.
+
 #### **2.4.3. Generator loss**
+
+- The goal of this phase is to strengthen the Generator's image creation ability so that the image it produces is as realistic as possible. We asume in this phase, the discriminator is fixed.
 
 - For the generator, it first draws some parameter $`\mathbf z\in\mathbb R^d`$ from a source of randomness, e.g., a normal distribution $`\mathbf z \sim \mathcal{N} (0, 1)`$. We often call z as the latent variable.
 
@@ -147,30 +182,48 @@ D(\mathbf x) = \frac{1}{1+e^{-o}}
 \max_G \{ - (1-y) \log(1-D(G(\mathbf z))) \} = \max_G \{ - \log(1-D(G(\mathbf z))) \}.
 ```
 
-- If the generator does a perfect job, then $`D(\mathbf x')\approx 1`$  so the above loss is near 0, which results in the gradients that are too small to make good progress for the discriminator. So commonly, we minimize the following loss, which is just feeding $`\mathbf x'=G(\mathbf z)`$ into the discriminator but giving label y = 1.
+- If the generator does a perfect job, then $`D(\mathbf x')\approx 1`$  so the above loss is near 0, which results in the gradients that are too small to make good progress for the discriminator.
+
+- Invert the sign of the above equation, we can minimize the following objective function:
 
 ```math
-\min_G \{ - y \log(D(G(\mathbf z))) \} = \min_G \{ - \log(D(G(\mathbf z))) \},
-```
-  
-- To sum up, D and G are playing a “minimax” game with the comprehensive objective function:
-
-```math
-\min_D \max_G \{ -E_{x \sim \textrm{Data}} \log D(\mathbf x) - E_{z \sim \textrm{Noise}} \log(1 - D(G(\mathbf z))) \}.
+\min_G V(G) = \underbrace{\mathbb{E}_{z \sim p_{z}(z)} [\log (1-D(G(z)))]}_{\text{log-probability D predicts G(z) is fake}}
 ```
 
 #### **2.4.4. GANs loss function (min-max GANs loss)**
 
+- To sum up, D and G are playing a “minimax” game with the comprehensive objective function:
+
+```math
+\min_{G} \max_{D} V(D, G) = \underbrace{\mathbb{E}_{x \sim p_{data}(x)} [\log D(x)]}_{\text{log-probability that D predict x is real}} + \underbrace{\mathbb{E}_{z \sim p_{z}(z)} [\log (1-D(G(z)))]}_{\text{log-probability D predicts G(z) is fake}}
+```
+
+- In which:
+  - D try to maximize the objective function by maximizing $`V(D, G)`$. Which mean it updates parameters to maximize value of $`D(x)`$ and minimize value of $`D(G(z))`$. In other words, it tries to classify real data as real and fake data as fake.
+  - G try to minimize the objective function by minimizing $`V(D, G)`$. Which mean it updates parameters to maximize value of $`D(G(z))`$. In other words, it tries to generate fake data that look like real data.
+
 ### **2.5. Training process**
+
+- In training process, we alternate between training the discriminator and the generator. In each step, we update the discriminator by one step and then update the generator by one step.
+
+![Training process](https://machinelearningmastery.com/wp-content/uploads/2019/05/Summary-of-the-Generative-Adversarial-Network-Training-Algorithm-1024x669.png)
+
+- Note that when train the discriminator, we need to freeze the parameters of generator and vice versa.
+
+- The training process is continued until the discriminator cannot distinguish between real and fake data or we reach the maximum number of epochs.
 
 ## **3. Applications and challenges of GANs**
 
-## **4. GANs variants overview**
+- Application of GANs and GANs variants model:
+  - Image generation
+  - Image to image translation
+  - Text to image generation
+  - Image super-resolution
+  - ...
 
-### **4.1. Conditional GANs**
-
-### **4.2. Deep Convolutional GANs (DCGANs)**
-
-### **4.3. StyleGANs**
-
-### **4.4. CycleGANs**
+- Chanllenges of GANs:
+  - GANs tend to show some inconsistencies in performance.
+  - Mode collapse
+  - Vanishing gradient
+  - Convergence
+  - ...
