@@ -81,9 +81,6 @@ The loss function of cGANs is the same as GANs with a little change of adding la
 
 The training process of cGANs is the same as GANs. It consists of two main steps: the generator step and the discriminator step.
 
-![D]()
-**
-
 <p align="center">
   <img src="https://miro.medium.com/v2/resize:fit:720/format:webp/0*sbnwxkciqzRzc2Ou.jpg" >
   <br>
