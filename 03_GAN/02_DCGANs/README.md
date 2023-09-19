@@ -16,7 +16,7 @@ The main change in DCGANs is the use of convolutional and convolutional-transpos
 ## **2. Architecture of DCGANs**
 
 <p align="center">
-  <img src="https://www.researchgate.net/publication/343597759/figure/fig4/AS:923532934529034@1597198818441/The-architecture-of-the-generator-and-the-discriminator-in-a-DCGAN-model-FSC-is-the.ppm" >
+  <img src="https://tjmachinelearning.com/lectures/1718/gan/dcgan.png" >
   <br>
   <i>Architecture of the generator and the discriminator in a DCGAN model.</i>
 </p>
