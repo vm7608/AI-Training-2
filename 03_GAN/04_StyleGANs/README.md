@@ -49,10 +49,12 @@ The StyleGAN is described as a progressive growing GAN architecture with 6 modif
 5. Addition of noise to each block.
 6. Addition Mixing regularization.
 
+<div style="text-align: center;">
 <figure style="text-align: center;">
   <img src="https://machinelearningmastery.com/wp-content/uploads/2019/06/Summary-of-the-StyleGAN-Generator-Model-Architecture.png" >
   <figcaption style="font-style: italic;">Summary of the StyleGAN Generator Model Architecture.</figcaption>
 </figure>
+</div>
 
 ### **2.1. Baseline Progressive GAN**
 
