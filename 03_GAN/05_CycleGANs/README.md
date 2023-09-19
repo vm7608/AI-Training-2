@@ -4,13 +4,19 @@
 
 Image-to-image translation is the task of transforming an image from one domain (e.g., images of zebras), to another (e.g., images of horses). Ideally, other features of the image — anything not directly related to either domain, such as the background — should stay recognizably the same
 
-![exp](https://hardikbansal.github.io/CycleGANBlog/images/gan_example.jpg)
-*Example of converting images from one domain to another.*
+<p align="center">
+  <img src="https://hardikbansal.github.io/CycleGANBlog/images/gan_example.jpg" >
+  <br>
+  <i>Example of converting images from one domain to another.</i>
+</p>
 
 Many previous works have applied deep learning to this problem by formulating it as a supervised learning problem on a dataset of training image pairs i.e the images of source and target domain should be of same location, and number of images of both the domains should also be same. However, obtaining paired examples isn’t always feasible.
 
-![Paired and Unpaired](https://lh6.googleusercontent.com/TISEaPBAOke5DtV_wBOi4bdXDHhvedvEcCOoldV45I9owIODfGO-GeZbPASenWETAfwE1-Ii0e8AO-Hz1yc6aiKaW821jqWukcu3ZqkZTFCRDW7P7zIxiKtbzVy4YF2X6-pj5iry1iR5khjTewJES3d2EJSxaySi5P55E6UkNIMJy1jel5IYQtvAKU4Dhw)
-*Example of paired and unpaired data.*
+<p align="center">
+  <img src="https://lh6.googleusercontent.com/TISEaPBAOke5DtV_wBOi4bdXDHhvedvEcCOoldV45I9owIODfGO-GeZbPASenWETAfwE1-Ii0e8AO-Hz1yc6aiKaW821jqWukcu3ZqkZTFCRDW7P7zIxiKtbzVy4YF2X6-pj5iry1iR5khjTewJES3d2EJSxaySi5P55E6UkNIMJy1jel5IYQtvAKU4Dhw" >
+  <br>
+  <i>Example of paired and unpaired data.</i>
+</p>
 
 CycleGAN was introduced in Berkeley's famous 2017 paper, titled “Unpaired Image-to-Image Translation using Cycle-Consistent Adversarial Networks”.
 
@@ -54,12 +60,18 @@ Cycle consistency loss compares an input photo to the generated photo and calcul
 
 The first GAN (GAN A) will take an image of a horse, generate image of a zebra, this image is provided as input to the second GAN (GAN B), which in turn will generate an image of a horse.The cycle consistency loss calculates the difference between the image input to GAN A and the image output by GAN B and the generator models are updated accordingly to reduce the difference in the images.
 
-![Summary of Example](https://hardikbansal.github.io/CycleGANBlog/images/model.jpg)
-![Summary of Example](https://hardikbansal.github.io/CycleGANBlog/images/model1.jpg)
-*Detail of CycleGANs Flow*
+<p align="center">
+  <img src="https://hardikbansal.github.io/CycleGANBlog/images/model.jpg" >
+  <img src="https://hardikbansal.github.io/CycleGANBlog/images/model1.jpg" >
+  <br>
+  <i>Detail of CycleGANs Flow</i>
+</p>
 
-![Example of CycleGANs](https://www.lherranz.org/wp-content/uploads/2018/07/blog_cyclegan_h2z2h.png)
-*Example of Cycle consistency loss.*
+<p align="center">
+  <img src="https://www.lherranz.org/wp-content/uploads/2018/07/blog_cyclegan_h2z2h.png" >
+  <br>
+  <i>Example of Cycle consistency loss.</i>
+</p>
 
 ### **2.2. Objective function**
 
@@ -76,8 +88,11 @@ Assume we have 2 GANs, G and F and 2 domains X and Y as following:
 - $`D_y`$: Distinguisher y from G(x)
 - $`D_x`$: Distinguisher x from F(y)
 
-![CycleGANs](https://media.geeksforgeeks.org/wp-content/uploads/20200529210740/cycleconsistencyandlosses.PNG)
-*CycleGANs architecture.*
+<p align="center">
+  <img src="https://media.geeksforgeeks.org/wp-content/uploads/20200529210740/cycleconsistencyandlosses.PNG" >
+  <br>
+  <i>CycleGANs architecture.</i>
+</p>
 
 #### **2.2.1. Adversarial Loss**
 
@@ -103,7 +118,7 @@ There are two process of training in the cycleGAN. Thus, there are also exist tw
 [\log(1 − D_{Y} (F(y)))]
 ```
 
-- In the above equations, 2 generators $`G`$ and $`F`$ are trained to minimize the adversarial loss while 2 discriminators $`D_{X}`$ and $`D_{Y}`$ are trained to maximize the adversarial loss.
+In the above equations, 2 generators $`G`$ and $`F`$ are trained to minimize the adversarial loss while 2 discriminators $`D_{X}`$ and $`D_{Y}`$ are trained to maximize the adversarial loss.
 
 #### **2.2.2. Cycle Consistency Loss**
 
@@ -149,8 +164,11 @@ Each CycleGAN generator has three sections: an encoder, a transformer, and a dec
 
 You can see the details in the figure below. Please note that each layer is followed by an instance normalization and a ReLU layer, but these have been omitted for simplicity.
 
-![Generator](https://images.viblo.asia/21fab617-eee8-41e9-bf74-7d31495db355.png)
-*Generator architecture of CycleGANs.*
+<p align="center">
+  <img src="https://images.viblo.asia/21fab617-eee8-41e9-bf74-7d31495db355.png" >
+  <br>
+  <i>Generator architecture of CycleGANs.</i>
+</p>
 
 As you can see above, the representation size shrinks in the encoder phase, stays constant in the transformer phase, and expands again in the decoder phase.
 
@@ -162,8 +180,11 @@ Since the generators’ architecture is fully convolutional, they can handle arb
 
 The discriminators are PatchGANs, fully CNN that look at a “patch” of the input image, and output the probability of the patch being “real”. This is both more computationally efficient than trying to look at the entire input image, and is also more effective — it allows the discriminator to focus on more surface-level features, like texture, which is often the sort of thing being changed in an image translation task.
 
-![Discriminator](https://images.viblo.asia/1696ebe2-b162-41a8-8f0b-92fc8bc88fdf.png)
-*An example architecture for a PatchGAN discriminator.*
+<p align="center">
+  <img src="https://images.viblo.asia/1696ebe2-b162-41a8-8f0b-92fc8bc88fdf.png" >
+  <br>
+  <i>An example architecture for a PatchGAN discriminator.</i>
+</p>
 
 PatchGAN is a fully convolutional network, that takes in an image, and produces a matrix of probabilities, each referring to the probability of the corresponding “patch” of the image being “real” (as opposed to generated). The representation size that each layer outputs is listed below it, in terms of the input image size, k. On each layer is listed the number of filters, the size of those filters, and the stride.
 
@@ -171,8 +192,11 @@ As you can see in the example architecture above, the PatchGAN halves the repres
 
 In discriminator, the author use 70x70 patchGAN architecture to classify on each small patch, the combination of whole patches make the final result of discriminator more trusted. Such patch-level discriminator architecture also has fewer parameters than full-image discriminator.
 
-![PatchGAN](https://phamdinhkhanh.github.io/assets/images/20201113_Pix2Pix/pic5.png)
-*PatchGAN architecture, the classification result is on each patch as on the figure*
+<p align="center">
+  <img src="https://phamdinhkhanh.github.io/assets/images/20201113_Pix2Pix/pic5.png" >
+  <br>
+  <i>PatchGAN architecture, the classification result is on each patch as on the figure</i>
+</p>
 
 ## **3. Training CycleGANs**
 
@@ -188,8 +212,11 @@ To training process stable, authors replace the negative log likelihood function
 
 In emperical, this way is more efficient when generate image with high quality.
 
-![Exp of Least Square Loss](https://av-eks-lekhak.s3.amazonaws.com/media/__sized__/article_images/Google_ChromeScreenSnapz098-thumbnail_webp-600x300.webp)
-*Example of Least Square Loss.*
+<p align="center">
+  <img src="https://av-eks-lekhak.s3.amazonaws.com/media/__sized__/article_images/Google_ChromeScreenSnapz098-thumbnail_webp-600x300.webp" >
+  <br>
+  <i>Example of Least Square Loss.</i>
+</p>
 
 The training stategy is process of found the optimization:
 
@@ -219,13 +246,22 @@ Some training details:
 
 Overall, the results produced by CycleGAN are very good — image quality approaches that of paired image-to-image translation on many tasks. This is impressive, because paired translation tasks are a form of fully supervised learning, and this is not.
 
-![Exp](https://images.viblo.asia/a7a99d48-7b3c-4d95-a0ae-a26da4c6165f.jpeg)
-*CycleGAN can be used for collection style transfer, where the entire works of an artist are used to train the model.*
+<p align="center">
+  <img src="https://images.viblo.asia/a7a99d48-7b3c-4d95-a0ae-a26da4c6165f.jpeg" >
+  <br>
+  <i>CycleGAN can be used for collection style transfer, where the entire works of an artist are used to train the model.</i>
+</p>
 
 CycleGAN works well on tasks that involve color or texture changes, like day-to-night photo translations, or photo-to-painting tasks like collection style transfer (see above). However, tasks that require substantial geometric changes to the image, such as cat-to-dog translations, usually fail.
 
-![Exp](https://i0.wp.com/nttuan8.com/wp-content/uploads/2020/05/6-2.png?resize=768%2C380&ssl=1)
-*A very unimpressive attempt at a cat-to-dog image translation.*
+<p align="center">
+  <img src="https://i0.wp.com/nttuan8.com/wp-content/uploads/2020/05/6-2.png?resize=768%2C380&ssl=1" >
+  <br>
+  <i>A very unimpressive attempt at a cat-to-dog image translation.</i>
+</p>
 
-![Exp](https://i0.wp.com/nttuan8.com/wp-content/uploads/2020/05/failure_putin.jpg?resize=768%2C576&ssl=1)
-*CycleGAN detect mistakes surrounding objects as horses and then switches characteristics leading to confusion*
+<p align="center">
+  <img src="https://i0.wp.com/nttuan8.com/wp-content/uploads/2020/05/failure_putin.jpg?resize=768%2C576&ssl=1" >
+  <br>
+  <i>CycleGAN detect mistakes surrounding objects as horses and then switches characteristics leading to confusion</i>
+</p>

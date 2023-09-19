@@ -15,7 +15,11 @@
 
 - This form of transfer learning used in deep learning is called inductive transfer. This is where the scope of possible models (model bias) is narrowed in a beneficial way by using a model fit on a different but related task.
 
-![Transfer Learning](https://machinelearningmastery.com/wp-content/uploads/2017/09/Depiction-of-Inductive-Transfer.png)
+<p align="center">
+  <img src="https://machinelearningmastery.com/wp-content/uploads/2017/09/Depiction-of-Inductive-Transfer.png" >
+  <br>
+  <i>Inductive Learning vs Inductive Transfer</i>
+</p>
 
 - In the above image: instead of searching the entire space of possible models, our spaces is narrowed to just those models that fit the first task. This is beneficial as it is a smaller search space from which to find a good or optimal model for the second task.
 
@@ -25,7 +29,11 @@
   - Use the pre-trained model as a fixed feature extractor
   - Fine-tune the pre-trained model
 
-![Transfer Learning Process](https://assets-global.website-files.com/5d7b77b063a9066d83e1209c/616b35e345c3ef0c628cc5e0_iSj6nsOOBJ4hZpVxoTkU-m2z8jae0n418HN7nexRt3ScdVKTixTH1AdU5am5Xpu1NdMjX-kpBBD8kWSzXQC2oqYQ_Yp64bC4rVbtsajjg9NYPZQlFvKzHavd8yGJNb7Lyr1aZpoG%3Ds0.png)
+<p align="center">
+  <img src="https://assets-global.website-files.com/5d7b77b063a9066d83e1209c/616b35e345c3ef0c628cc5e0_iSj6nsOOBJ4hZpVxoTkU-m2z8jae0n418HN7nexRt3ScdVKTixTH1AdU5am5Xpu1NdMjX-kpBBD8kWSzXQC2oqYQ_Yp64bC4rVbtsajjg9NYPZQlFvKzHavd8yGJNb7Lyr1aZpoG%3Ds0.png" >
+  <br>
+  <i>Transfer Learning Process</i>
+</p>
 
 ### **2.1. Feature extractor**
 
@@ -35,7 +43,11 @@
 
 - The pre-trained model is used as a fixed feature extractor. This means that the weights of the pre-trained model will not be updated during training.
 
-![Feature Extractor](https://raw.githubusercontent.com/mrdbourke/tensorflow-deep-learning/main/images/04-transfer-learning-feature-extraction.png)
+<p align="center">
+  <img src="https://raw.githubusercontent.com/mrdbourke/tensorflow-deep-learning/main/images/04-transfer-learning-feature-extraction.png" >
+  <br>
+  <i>Feature Extractor Example</i>
+</p>
 
 - In short, we have the following workflow:
   - 1. Take layers from a previously trained model.
@@ -70,7 +82,11 @@
   - Higher slope: The rate of improvement of skill during training of the source model is steeper than it otherwise would be.
   - Higher asymptote: The converged skill of the trained model is better than it otherwise would be.
 
-![Transfer Learning](https://machinelearningmastery.com/wp-content/uploads/2017/09/Three-ways-in-which-transfer-might-improve-learning.png)
+<p align="center">
+  <img src="https://machinelearningmastery.com/wp-content/uploads/2017/09/Three-ways-in-which-transfer-might-improve-learning.png" >
+  <br>
+  <i>Transfer Learning Benefits</i>
+</p>
 
 - There are 2 most important factor of using Transfer Learning or not:
   - Dataset size: Small or Large
@@ -90,7 +106,11 @@
 
   - **Large Dataset, Different Problem:** We should train the model from sratch, but it will be better if we initialize the weights of the model with the weights of the pre-trained model.
 
-![Transfer Learning](https://phamdinhkhanh.github.io/assets/images/20200415_TransferLearning/pic5.jpg)
+<p align="center">
+  <img src="https://phamdinhkhanh.github.io/assets/images/20200415_TransferLearning/pic5.jpg" >
+  <br>
+  <i>4 cases of using Transfer Learning</i>
+</p>
 
 ## **4. Notice**
 

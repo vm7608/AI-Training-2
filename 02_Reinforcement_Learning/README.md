@@ -30,7 +30,11 @@
 
 - **Q value or action value (Q)**: It is mostly similar to the value, but it takes an extra parameter, which is the current action.
 
-![RL](https://www.guru99.com/images/1/082319_0514_Reinforceme1.png)
+<p align="center">
+  <img src="https://www.guru99.com/images/1/082319_0514_Reinforceme1.png" >
+  <br>
+  <i>Typical RL Scenario</i>
+</p>
 
 ## **3. Approaches to implement Reinforcement Learning**
 
@@ -112,7 +116,11 @@
 
 - Consider the following problems:
 
-![prob](https://static.javatpoint.com/tutorial/reinforcement-learning/images/reinforcement-learning-works.png)
+<p align="center">
+  <img src="https://static.javatpoint.com/tutorial/reinforcement-learning/images/reinforcement-learning-works.png" >
+  <br>
+  <i>Example problem</i>
+</p>
 
 - In the above problem, the agent is at s9 and it have to get to s4 for the diamond.
   - The agent can move in four directions: up, down, left, and right.
@@ -122,11 +130,19 @@
 
 - Initally, the agent will explore the enviroment and try to reach the diamond. As soon as it reachs the diamond, it will backtrace its step back and mark values of all states which leads towards the goal as V = 1.
 
-![Without Bellman](https://media.geeksforgeeks.org/wp-content/uploads/20210914203249/Env11.png)
+<p align="center">
+  <img src="https://media.geeksforgeeks.org/wp-content/uploads/20210914203249/Env11.png" >
+  <br>
+  <i>Result without Bellman</i>
+</p>
 
 - But, if we change the start position, the agent can not find the path to the goal. So, we need to use the Bellman equation to solve this problem.
 
-![Problem](https://static.javatpoint.com/tutorial/reinforcement-learning/images/reinforcement-learning-works3.png)
+<p align="center">
+  <img src="https://static.javatpoint.com/tutorial/reinforcement-learning/images/reinforcement-learning-works3.png" >
+  <br>
+  <i>Problem without Bellman</i>
+</p>
 
 ### **5.2 The Bellman Equation**
 
@@ -179,7 +195,11 @@
   
   - s9 block is also the start block of agent.
 
-  ![Results](https://static.javatpoint.com/tutorial/reinforcement-learning/images/reinforcement-learning-bellman-equation.png)
+  <p align="center">
+    <img src="https://static.javatpoint.com/tutorial/reinforcement-learning/images/reinforcement-learning-bellman-equation.png" >
+    <br>
+    <i>Result using Bellman equation</i>
+  </p>
 
   - Now we move to s7 block, here the agent have 3 option:
     - UP to s3
@@ -187,7 +207,11 @@
     - DOWN to s11
     - Can not move left to s6 because it is a wall.
 
-  ![s7](https://static.javatpoint.com/tutorial/reinforcement-learning/images/reinforcement-learning-bellman-equation2.png)
+  <p align="center">
+    <img src="https://static.javatpoint.com/tutorial/reinforcement-learning/images/reinforcement-learning-bellman-equation2.png" >
+    <br>
+    <i>s7 block</i>
+  </p>
 
   - The `max` in Bellman equation denote the most optimal path among all posible action that agent can take at a given state. Among all these actions available the maximum value for that state is the UP action. So, the Bellman equation will be:
 
@@ -197,7 +221,11 @@
 
   - Continue the process, we got the final result. The agent will take the path with maximum value by following the increasing value of the states based on the Bellman equation.
 
-  ![Results](https://static.javatpoint.com/tutorial/reinforcement-learning/images/reinforcement-learning-bellman-equation3.png)
+<p align="center">
+  <img src="https://static.javatpoint.com/tutorial/reinforcement-learning/images/reinforcement-learning-bellman-equation3.png" >
+  <br>
+  <i>Final result</i>
+</p>
 
 ## **6. Types of Reinforcement Learning**
 
@@ -229,7 +257,11 @@ There are two types of reinforcement learning methods.
   - A set of rewards (Ra) received after transitioning from state s to s' with action a
   - A transition probability matrix (Pa) which is the probability of transitioning from state s to s' with action a
 
-![MDP](https://static.javatpoint.com/tutorial/reinforcement-learning/images/reinforcement-learning-markov-decision-process.png)
+<p align="center">
+  <img src="https://static.javatpoint.com/tutorial/reinforcement-learning/images/reinforcement-learning-markov-decision-process.png" >
+  <br>
+  <i>Markov Decision Process</i>
+</p>
 
 ### **7.2 Markov Property**
 
@@ -257,7 +289,11 @@ There are two types of reinforcement learning methods.
 
 - The below flowchart explains the working of Q-learning:
 
-![Q-Learning](https://static.javatpoint.com/tutorial/reinforcement-learning/images/reinforcement-learning-algorithms.png)
+<p align="center">
+  <img src="https://static.javatpoint.com/tutorial/reinforcement-learning/images/reinforcement-learning-algorithms.png" >
+  <br>
+  <i>Q-Learning flowchart</i>
+</p>
 
 #### **8.1.2 Describe a example**
 
@@ -271,7 +307,11 @@ There are two types of reinforcement learning methods.
 
 - The problem is how do we train a robot to reach the end goal with the shortest path without stepping on a mine?
 
-![Prob](https://cdn-media-1.freecodecamp.org/images/3JXI06jyHegMS1Yx8rhIq64gkYwSTM7ZhD25)
+<p align="center">
+  <img src="https://cdn-media-1.freecodecamp.org/images/3JXI06jyHegMS1Yx8rhIq64gkYwSTM7ZhD25" >
+  <br>
+  <i>Example problem</i>
+</p>
 
 #### **8.1.2 Q-Table**
 
@@ -279,23 +319,39 @@ There are two types of reinforcement learning methods.
 
 - In Q-Table, the columns represent the actions, and the rows represent the states. Each Q-table score will be the maximum expected future reward that the robot will get if it takes that action at that state. This is an iterative process, as we need to improve the Q-Table at each iteration.
 
-![QTable](https://codelearn.io/Media/Default/Users/th1475369_40gmail_2Ecom/tictactoe_dqn/pic7.png)
+<p align="center">
+  <img src="https://codelearn.io/Media/Default/Users/th1475369_40gmail_2Ecom/tictactoe_dqn/pic7.png" >
+  <br>
+  <i>Q-table</i>
+</p>
 
 - For the above example:
 
-![Example](https://cdn-media-1.freecodecamp.org/images/AjVvggEquHgsnMN8i4N35AMfx53vZtELEL-l)
+<p align="center">
+  <img src="https://cdn-media-1.freecodecamp.org/images/AjVvggEquHgsnMN8i4N35AMfx53vZtELEL-l" >
+  <br>
+  <i>Q-table for above problem</i>
+</p>
 
 #### **8.1.3 Mathematics: the Q-Learning algorithm**
 
 - The main process of Q-Learning algorithmn:
 
-![Q](https://cdn-media-1.freecodecamp.org/images/oQPHTmuB6tz7CVy3L05K1NlBmS6L8MUkgOud)
+<p align="center">
+  <img src="https://cdn-media-1.freecodecamp.org/images/oQPHTmuB6tz7CVy3L05K1NlBmS6L8MUkgOud" >
+  <br>
+  <i>Main process of Q-Learning algorithmn</i>
+</p>
 
 - Step 1: Initialize the Q-table with zeros.
   - There are n columns, where n is number of actions. There are m rows, where m is number of states.
   - We will initialise the values at 0.
 
-![Step 1](https://cdn-media-1.freecodecamp.org/images/TQ9Wy3guJHUecTf0YA5AuQgB9yVIohgLXKIn)
+<p align="center">
+  <img src="https://cdn-media-1.freecodecamp.org/images/TQ9Wy3guJHUecTf0YA5AuQgB9yVIohgLXKIn" >
+  <br>
+  <i>Initialize the Q-table with zeros</i>
+</p>
 
 - Steps 2 and 3: choose and perform an action.
   - This combination of steps is done for an undefined amount of time. This means that this step runs until the time we stop the training, or the training loop stops as defined in the code.
@@ -309,7 +365,11 @@ There are two types of reinforcement learning methods.
 - Steps 4 and 5: evaluate.
   - Now we have taken an action and observed an outcome and reward.We need to update the function Q(s,a).
 
-  ![Update formula](https://cdn-media-1.freecodecamp.org/images/TnN7ys7VGKoDszzv3WDnr5H8txOj3KKQ0G8o)
+  <p align="center">
+    <img src="https://cdn-media-1.freecodecamp.org/images/TnN7ys7VGKoDszzv3WDnr5H8txOj3KKQ0G8o" >
+    <br>
+    <i>Q-table update formula</i>
+  </p>
 
   - Discount rate is a value between 0 and 1. It is used to balance immediate and future reward. Very low discount factor signifies importance to immediate reward while high discount signifies importance to future reward. The true value of the discount factor is application dependent but the optimal value of the discount factor lies between 0.2 to 0.8.
 
@@ -323,7 +383,11 @@ There are two types of reinforcement learning methods.
 
 - To solve such an issue, we can use a DQN algorithm. Where, instead of defining a Q-table, neural network approximates the Q-values for each action and state.
 
-![Q vs DQN](https://codelearn.io/Media/Default/Users/th1475369_40gmail_2Ecom/tictactoe_dqn/pic10.png)
+<p align="center">
+  <img src="https://codelearn.io/Media/Default/Users/th1475369_40gmail_2Ecom/tictactoe_dqn/pic10.png" >
+  <br>
+  <i>Q-Learning vs Deep Q-Learning</i>
+</p>
 
 ## **9. Reinforcement Learning vs Supervised Learning**
 
