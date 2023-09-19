@@ -49,8 +49,10 @@ The StyleGAN is described as a progressive growing GAN architecture with 6 modif
 5. Addition of noise to each block.
 6. Addition Mixing regularization.
 
-![StyleGAN Architecture](https://machinelearningmastery.com/wp-content/uploads/2019/06/Summary-of-the-StyleGAN-Generator-Model-Architecture.png)
-*Summary of the StyleGAN Generator Model Architecture.*
+<figure style="text-align: center;">
+  <img src="https://machinelearningmastery.com/wp-content/uploads/2019/06/Summary-of-the-StyleGAN-Generator-Model-Architecture.png" >
+  <figcaption style="font-style: italic;">Summary of the StyleGAN Generator Model Architecture.</figcaption>
+</figure>
 
 ### **2.1. Baseline Progressive GAN**
 
@@ -62,19 +64,26 @@ ProGANs are a type of GAN that uses a progressive training process to generate h
 - The discriminator step: the discriminator is trained to distinguish between real and synthetic images.
 - The generator and discriminator are trained simultaneously in an adversarial process.
 
-![Example of progressive growing](https://editor.analyticsvidhya.com/uploads/63219pg.png)
-*Example of Progressive Adding Layers to Generator and Discriminator Models.*
+<figure style="text-align: center;">
+  <img src="https://editor.analyticsvidhya.com/uploads/63219pg.png" >
+  <figcaption style="font-style: italic;">Example of Progressive Adding Layers to Generator and Discriminator Models.</figcaption>
+</figure>
 
 Here we can see in the above figure that Progressive Growing GAN involves using a generator and discriminator model with the traditional GAN structure and its starts with very small images, such as 4×4 pixels.
 
 During the training process, it systematically adds new blocks of convolutional layers to both the generator model and the discriminator model. This incremental addition of the convolutional layers allows the models to learn coarse-level detail effectively at the beginning and later learn even finer detail, both on the generator and discriminator side.
 
-![Example](https://editor.analyticsvidhya.com/uploads/61324Screenshot%202021-05-14%20170122.png)
+<figure style="text-align: center;">
+  <img src="https://editor.analyticsvidhya.com/uploads/61324Screenshot%202021-05-14%20170122.png" >
+  <figcaption style="font-style: italic;">Example of Progressive Growing GAN.</figcaption>
+</figure>
 
 The process of adding a new block of layers involves the usage of *skip connection* as shown in the above figure, it is mainly to connect the new block either to the output of the generator or the input of the discriminator and adding it to the existing output or input layer with a weighting which controls the influence of the new block.
 
-![Example](https://images.viblo.asia/8b1ec183-ea83-4898-90af-335524e2af0c.gif)
-*Example of Progressive Growing GAN.*
+<figure style="text-align: center;">
+  <img src="https://images.viblo.asia/8b1ec183-ea83-4898-90af-335524e2af0c.gif" >
+  <figcaption style="font-style: italic;">Example of Progressive Growing GAN.</figcaption>
+</figure>
 
 The authors observe that a potential benefit of the ProGAN progressive layers is their ability to control different visual features of the image, if utilized properly. The lower the layer (and the resolution), the coarser the features it affects. The paper divides the features into three types:
 
@@ -94,8 +103,10 @@ For example, if images of people with black hair are more common in the dataset,
 
 However, by using another neural network the model can generate a vector that doesn’t have to follow the training data distribution and can reduce the correlation between features. Instead of directly providing latent vector to input layer the mapping is used. In this paper, the latent vector (z) of size 512 is mapped to another vector of 512 (w). The mapping function is implemented using 8-layer MLP (8- fully connected layers).
 
-![exp](https://miro.medium.com/v2/resize:fit:720/format:webp/0*6lEwRXKiA8WGRlEc.png)
-*The generator with the Mapping Network (in addition to the ProGAN synthesis network)*
+<figure style="text-align: center;">
+  <img src="https://miro.medium.com/v2/resize:fit:720/format:webp/0*6lEwRXKiA8WGRlEc.png" >
+  <figcaption style="font-style: italic;">The generator with the Mapping Network (in addition to the ProGAN synthesis network)</figcaption>
+</figure>
 
 The AdaIN (Adaptive Instance Normalization) module transfers the encoded information ⱳ, created by the Mapping Network, into the generated image. The module is added to each resolution level of the Synthesis Network and defines the visual expression of the features in that level:
 
@@ -103,8 +114,10 @@ The AdaIN (Adaptive Instance Normalization) module transfers the encoded informa
 2. The intermediate vector ⱳ is transformed using another fully-connected layer (marked as A) into a scale and bias for each channel.
 3. The scale and bias vectors shift each channel of the convolution output, thereby defining the importance of each filter in the convolution. This tuning translates the information from ⱳ to a visual representation.
 
-![exp](https://miro.medium.com/v2/resize:fit:720/format:webp/0*uqn4slMHrFYkFmjS.png)
-*The generator’s Adaptive Instance Normalization (AdaIN)*
+<figure style="text-align: center;">
+  <img src="https://miro.medium.com/v2/resize:fit:720/format:webp/0*uqn4slMHrFYkFmjS.png" >
+  <figcaption style="font-style: italic;">The generator’s Adaptive Instance Normalization (AdaIN)</figcaption>
+</figure>
 
 The input to the AdaIN is y = (ys, yb) which is generated by applying (A) to (w). Through AdaIN, each feature map x is normalized separately, and then scaled and biased using the corresponding scalar components from style y. Thus the dimensional of y is twice the number of feature maps  (x) on that layer. The synthesis network contains 18 convolutional layers 2 for each of the resolutions (4×4 – 1024×1024).
 
@@ -127,8 +140,10 @@ Most previous style transfer model uses the random input to create the initial l
 
 The StyleGAN team found that the image features are controlled by ⱳ and the AdaIN, and therefore the initial input can be omitted and replaced by constant values. Though the paper doesn’t explain why it improves performance, a safe assumption is that it reduces feature entanglement — it’s easier for the network to learn only using ⱳ without relying on the entangled input vector.
 
-![exp](https://miro.medium.com/v2/resize:fit:640/format:webp/0*8TIREj1JVUT_IF4W.png)
-*The Synthesis Network input is replaced with a constant input*
+<figure style="text-align: center;">
+  <img src="https://miro.medium.com/v2/resize:fit:640/format:webp/0*8TIREj1JVUT_IF4W.png" >
+  <figcaption style="font-style: italic;">The Synthesis Network input is replaced with a constant input</figcaption>
+</figure>
 
 ### **2.5. Addition of Noise to Each Block**
 
@@ -136,8 +151,10 @@ There are many aspects in people’s faces that are small and can be seen as sto
 
 The noise in StyleGAN is added in a similar way to the AdaIN mechanism — A scaled noise is added to each channel before the AdaIN module and changes a bit the visual expression of the features of the resolution level it operates on.
 
-![exp](https://miro.medium.com/v2/resize:fit:720/format:webp/1*GwchALioRMC1xlj7Bh0ZMg.png)
-*Adding scaled noise to each resolution level of the synthesis network*
+<figure style="text-align: center;">
+  <img src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*GwchALioRMC1xlj7Bh0ZMg.png" >
+  <figcaption style="font-style: italic;">Adding scaled noise to each resolution level of the synthesis network</figcaption>
+</figure>
 
 In the above image, A Gaussian noise (represented by B) is added to each of these activation maps before the AdaIN operations. A different sample of noise is generated for each block and is interpreted on the basis of scaling factors of that layer.
 
@@ -147,8 +164,10 @@ The Style generation used intermediate vector at each level of synthesis network
 
 Though it doesn’t improve the model performance on all datasets, this concept has a very interesting side effect — its ability to combine multiple images in a coherent way.
 
-![Style Mixing](https://miro.medium.com/v2/resize:fit:640/format:webp/1*PrawB43bcY7JPb6cSB9PcQ.png)
-*Style mixing results with different crossover points applied.*
+<figure style="text-align: center;">
+  <img src="https://miro.medium.com/v2/resize:fit:640/format:webp/1*PrawB43bcY7JPb6cSB9PcQ.png" >
+  <figcaption style="font-style: italic;">Style mixing results with different crossover points applied.</figcaption>
+</figure>
 
 Here we can see the impact of the crossover point (different resolutions) on the resulting image:
 
@@ -158,5 +177,7 @@ Here we can see the impact of the crossover point (different resolutions) on the
 
 ## **3. Conclusion**
 
-![exp](https://miro.medium.com/v2/resize:fit:720/format:webp/0*ANwSHXJDmwqjNSxi.png)
-*An overview architecture of StyleGAN*
+<figure style="text-align: center;">
+  <img src="https://miro.medium.com/v2/resize:fit:720/format:webp/0*ANwSHXJDmwqjNSxi.png" >
+  <figcaption style="font-style: italic;">An overview architecture of StyleGAN</figcaption>
+</figure>
