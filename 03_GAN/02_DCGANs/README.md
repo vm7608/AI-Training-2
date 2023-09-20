@@ -21,23 +21,23 @@ The main change in DCGANs is the use of convolutional and convolutional-transpos
   <i>Architecture of the generator and the discriminator in a DCGAN model.</i>
 </p>
 
-### **2.1 Replace any pooling layer with convolutional stride**
+The following are the main architectural features of DCGANs.
+
+### **2.1. Replace any pooling layer with convolutional stride**
 
 In CNNs, max pooling is used to reduce the spatial dimensions of the feature maps. However, max pooling is not suitable for GANs because it discards information about the location of features in the feature maps.
 
-So, DCGANs replace all max pooling layers with convolutional layers with stride. That will allow the network to learn its own spatial downsampling.
-
-This approach is used in our generator, allowing it to learn its own spatial upsampling, and discriminator
+So, DCGANs replace all max pooling layers with convolutional layers with stride. That will allow the network to learn its own spatial downsampling. This approach is used in Generator, allowing it to learn its own spatial upsampling, and also in Discriminator, allowing it to learn its own spatial downsampling.
 
 ### **2.2. Use transposed convolution for upsampling**
 
 Transposed convolution is used in the generator to produce an image from a random noise vector.
 
-Transposed convolution is also known as fractionally-strided convolution or deconvolution. It is the opposite of convolution. It takes a small input tensor and produces a larger output tensor.
+Transposed convolution is also known as fractionally-strided convolution or deconvolution. It is the opposite of convolution. A transposed convolutional layer is usually carried out for upsampling. It takes a small input tensor/feature map and produces a larger output tensor/feature map.
 
 If a convolution with stride > 1 will reduce the spatial dimensions of the feature maps, a transposed convolution with stride > 1 will increase the spatial dimensions of the feature maps.
 
-A transposed convolutional layer, on the other hand, is usually carried out for upsampling i.e. to generate an output feature map that has a spatial dimension greater than that of the input feature map. Just like the standard convolutional layer, the transposed convolutional layer is also defined by the padding and stride. These values of padding and stride are the one that hypothetically was carried out on the output to generate the input. i.e. if you take the output, and carry out a standard convolution with stride and padding defined, it will generate the spatial dimension same as that of the input.
+Just like the standard convolutional layer, the transposed convolutional layer is also defined by the padding and stride.
 
 <p align="center">
   <img src="https://i0.wp.com/nttuan8.com/wp-content/uploads/2020/04/t2.png?resize=1536%2C366&ssl=1" >
@@ -63,6 +63,12 @@ For a given size of the input (i), kernel (k), padding (p), and stride (s), the 
 o = s \times (i-1) + k - 2p
 ```
 
+For the example in above image, we have stride = 2, padding = 1, kernel = 3, input = 4, so:
+
+```math
+o = 2 \times (4-1) + 3 - 2 \times 1 = 7
+```
+
 <p align="center">
   <img src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*zbVS6lHvo9J4aRZeE-77lA.png" >
   <br>
@@ -73,9 +79,9 @@ o = s \times (i-1) + k - 2p
 
 The author of DCGANs noted that:
 
-- The state of art trend towards eliminating fully connected layers on top of convolutional features. The strongest example of this is global average pooling which has been utilized in state of the art image classification models. But the author found that gobal average pooling increased model stability but hurt convergence speed.
+- The state of art trend towards eliminating fully connected layers on top of convolutional features. The strongest example of this is global average pooling which has been utilized in state of the art image classification models instead of fully connected layers. But the author found that global average pooling increased model stability but hurt convergence speed.
 
-- A "middle ground" approach they used that worked well was to directly connect the output of the highest convolutional layer in the generator/discriminator to the input and output respectively, without any intervening fully connected layers.
+- A "middle ground" approach they used that worked well was to directly connect the output of the highest convolutional layer in the generator/discriminator to the input and output respectively, without going through any fully connected layers.
 
 - In DCGANs, the first layer of the GAN, which takes a uniform noise distribution Z as input, could be called fully connected as it is just a matrix multiplication, but the result is reshaped into a 4-dimensional tensor and used as the start of the convolution stack. For the discriminator, the last convolution layer is flattened and then fed into a single sigmoid output.
 
@@ -85,16 +91,30 @@ Batch normalization is a technique for improving the speed, performance, and sta
 
 This proved critical to get deep generators to begin learning, preventing the generator from collapsing all samples to a single point which is a common failure mode observed in GANs.
 
-Directly applying batchnorm to all layers however, resulted in sample oscillation and model instability. This was avoided by not applying batchnorm to the generator output layer and the discriminator input layer
+Directly applying batchnorm to all layers however, resulted in sample oscillation and model instability. This was avoided by not applying batchnorm to the generator output layer and the discriminator input layer.
+
+<p align="center">
+  <img src="https://i.stack.imgur.com/VEQhM.png" >
+  <br>
+  <i>Batch Normalization process</i>
+</p>
 
 ### **2.5. Activation function**
 
-The ReLU activation function is used in the generator for all layers except the output layer, which uses the tanh activation function. Tanh is used in the output layer because the input images are normalized to [-1, 1] and tanh is the only activation function that can produce negative values.
+The ReLU activation function is used in the generator for all layers except the output layer, which uses the tanh activation function. Tanh is used in the output layer of generator because the input images are normalized to [-1, 1].
+
+This is due to the fact that when generating the images, we are typically normalized to be either in the range [0,1] or [-1,1]. So if we want output images to be in [0,1] we can use a sigmoid and if we want them to be in [-1,1] we can use tanh.
 
 The author observed that using a bounded activation allowed the model to learn more quickly to saturate and cover the color space of the training distribution.
 
 Within the discriminator, they also found that The LeakyReLU activation function work
 well, especially for higher resolution modeling. So LeakyReLU is used in the discriminator for all layers.
+
+<p align="center">
+  <img src="https://ai-artificial-intelligence.webyes.com.br/wp-content/uploads/2022/09/image-1-967x1024.png" >
+  <br>
+  <i>Some common activation functions</i>
+</p>
 
 ### **2.6. Loss function**
 

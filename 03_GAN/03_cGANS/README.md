@@ -6,9 +6,9 @@ The original GANs/DCGANs have the following main disadvantages:
 
 - Lack of control/input: The original GANs/DCGANs generate images based only on random noise inputs. There is no control or condition given to the generator. So, we cannot generate images of a specific class.
 - Limited applications: Without conditional inputs, they are only suitable for tasks like generating natural images from noise, not for applications like text-to-image generation which require control.
-- Inability to target specific domains: GANs/DCGANs may generate blurry or unrealistic images as they don't receive any domain-specific guidance. CGANs can target specific domains by conditioning on metadata.
+- Inability to target specific domains: GANs/DCGANs may generate blurry or unrealistic images as they don't receive any domain-specific guidance.
 
-In 2014, Mehdi Mirza (a Ph.D. student at the University of Montreal) and Simon Osindero (an Architect at Flickr AI), published the Conditional Generative Adversarial Nets paper, in which the generator and discriminator of the original GAN model are conditioned during the training on external information
+In 2014, Mehdi Mirza and Simon Osindero, published the "Conditional Generative Adversarial Nets " paper, in which the generator and discriminator of the original GAN model are conditioned during the training on external information.
 
 Conditional GANs (cGANs) that will help to generate images of a specific class based on additional information (labels y). y can be any additional information such as class labels, image descriptions, etc. and it can be seem as a condition to generate images so we call it conditional GANs (cGANs).
 
@@ -24,7 +24,7 @@ The idea is straightforward. Both generator and discriminator are fed a class la
 
 ### **2.1. Generator**
 
-The CGAN Generator’s model is similar to DCGAN Generator’s model except for the one-hot vector, which is used to condition Generator outputs.
+The CGANs Generator’s model is similar to DCGAN Generator’s model except for the one-hot vector, which is used to condition Generator outputs.
 
 <p align="center">
   <img src="https://phamdinhkhanh.github.io/assets/images/20200809_ConditionalGAN/pic1.jpg" >

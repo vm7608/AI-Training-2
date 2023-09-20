@@ -18,11 +18,9 @@ Many previous works have applied deep learning to this problem by formulating it
   <i>Example of paired and unpaired data.</i>
 </p>
 
-CycleGAN was introduced in Berkeley's famous 2017 paper, titled “Unpaired Image-to-Image Translation using Cycle-Consistent Adversarial Networks”.
+CycleGAN was introduced in Berkeley's famous 2017 paper, titled “Unpaired Image-to-Image Translation using Cycle-Consistent Adversarial Networks”. CycleGAN is an approach to training a deep convolutional neural network for image-to-image translation tasks. The Network learns mapping between input and output images using unpaired dataset.
 
-The Cycle Generative Adversarial Network, or CycleGAN, is an approach to training a deep convolutional neural network for image-to-image translation tasks. The Network learns mapping between input and output images using unpaired dataset.
-
-The power of CycleGAN is able to learn such transformations without one-to-one mapping between training data in source and target domains. It was interesting because it did not require paired training data — while an x and y set of images are still required, they do not need to directly correspond to each other. In other words, if you wanted to translate between sketches and photos, you still need to train on a bunch of sketches and a bunch of photos, but the sketches would not need to be of the exact photos in your dataset.
+The power of CycleGAN is able to learn transformations without one-to-one mapping between training data in source and target domains. It was interesting because it did not require paired training data — while an x and y set of images are still required, they do not need to directly correspond to each other. In other words, if you wanted to translate between sketches and photos, you still need to train on a bunch of sketches and a bunch of photos, but the sketches would not need to be of the exact photos in your dataset.
 
 ## **2. Architecture of CycleGANs**
 
@@ -44,21 +42,13 @@ The intution is to develop an architecture of 2 GANs, and each GAN has a discrim
 
 Each GAN has:
 
-- A *conditional generator model* that will synthesize an image given an input image. And each GAN.
+- A *conditional generator model* that will synthesize an image given an input image.
 - A *discriminator model* to predict how likely the generated image is to have come from the target image collection.
 
 | Model | Generator Input | Generator Output | Discriminator Input | Discriminator Output |
 |-|-|-|-|-|
 | GAN A | Photos of horses | Photos of zebras | Photos of zebras from collection 2 and output from Generator A | Likelihood image is from collection 2 |
 | GAN B | Photos of zebras | Photos of horses | Photos of horses from collection 1 and output from Generator B | Likelihood image is from collection 1 |
-
-#### **2.1.2. Cycle Consistency Loss**
-
-So far, the models are sufficient for generating plausible images in the target domain but are not translations of the input image. So, each of the GANs are also updated using `cycle consistency loss`. This is designed to encourage the synthesized images in the target domain that are translations of the input image.
-
-Cycle consistency loss compares an input photo to the generated photo and calculates the difference between the two, e.g. using the L1 norm or summed absolute difference in pixel values.
-
-The first GAN (GAN A) will take an image of a horse, generate image of a zebra, this image is provided as input to the second GAN (GAN B), which in turn will generate an image of a horse.The cycle consistency loss calculates the difference between the image input to GAN A and the image output by GAN B and the generator models are updated accordingly to reduce the difference in the images.
 
 <p align="center">
   <img src="https://hardikbansal.github.io/CycleGANBlog/images/model.jpg" >
@@ -67,15 +57,23 @@ The first GAN (GAN A) will take an image of a horse, generate image of a zebra, 
   <i>Detail of CycleGANs Flow</i>
 </p>
 
+#### **2.1.2. Cycle Consistency**
+
+So far, the models are sufficient for generating plausible images in the target domain but are not translations of the input image. So, each of the GANs are also updated using `cycle consistency loss`. This is designed to encourage the synthesized images in the target domain that are translations of the input image.
+
+Cycle consistency loss compares an input photo to the generated photo and calculates the difference between the two, e.g. using the L1 norm or summed absolute difference in pixel values.
+
+The first GAN (GAN A) will take an image of a horse, generate image of a zebra, this image is provided as input to the second GAN (GAN B), which in turn will generate an image of a horse.The cycle consistency loss calculates the difference between the image input to GAN A and the image output by GAN B and the generator models are updated accordingly to reduce the difference in the images.
+
 <p align="center">
-  <img src="https://www.lherranz.org/wp-content/uploads/2018/07/blog_cyclegan_h2z2h.png" >
+  <img src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*pLvOZXuDoyzh8BvinGW4Aw.png" >
   <br>
   <i>Example of Cycle consistency loss.</i>
 </p>
 
 ### **2.2. Objective function**
 
-There are two components to the CycleGAN objective function, an adversarial loss and a cycle consistency loss. Both are essential to getting good results.
+There are 2 components to the CycleGAN objective function: an adversarial loss and a cycle consistency loss. Both are essential to getting good results.
 
 - The adversarial loss is identical to the one used in the original GAN paper. It is a binary cross-entropy loss that encourages our generator to produce images that are indistinguishable from real images by our discriminator.
 
@@ -144,7 +142,7 @@ Cycle consistency loss function try to constrain both of these 2 process to gene
 [||G(F(y)) − y||_1]
 ```
 
-The cycle in cycle consistency loss meaning that the learning process repeats in both direction from $`x`$ to $`y`$ and from $`y`$ to $`x`$.
+The cycle in cycle consistency loss meaning that the learning process repeats in both direction.
 
 #### **2.2.3. Full Objective**
 
@@ -259,6 +257,8 @@ CycleGAN works well on tasks that involve color or texture changes, like day-to-
   <br>
   <i>A very unimpressive attempt at a cat-to-dog image translation.</i>
 </p>
+
+CycleGANs also have a tendency to create confusion about objects or to transform objects into the wrong thing. This is because the model is trained on unpaired data, and so it has no way of knowing what objects are supposed to be in the image. It can only learn to translate textures and colors.
 
 <p align="center">
   <img src="https://i0.wp.com/nttuan8.com/wp-content/uploads/2020/05/failure_putin.jpg?resize=768%2C576&ssl=1" >

@@ -8,15 +8,15 @@ Generative Adversarial Networks (GANs) were developed in 2014 by Ian Goodfellow 
 
 To understand the term GAN let’s break it into separate three parts:
 
-- Generative – To learn a generative model, which can captures the distribution of training data and can be used to generate new samples.
+- Generative – A generative model, which can captures the distribution of training data and can be used to generate new samples.
 - Adversarial – The training of the model is done in an adversarial setting.
-- Networks – use deep neural networks for training purposes.
+- Networks – Use deep neural networks for training purposes.
 
-GANs have two main blocks (two neural networks) which compete with each other. They are Generator and Discriminator. The generator tries to generate new data instances while the discriminator tries to distinguish between real and fake data.
+GANs have two main blocks (two neural networks) which compete with each other. They are Generator and Discriminator. The generator tries to generate new data instances while the discriminator tries to distinguish between real and generated data.
 
 ### **1.2. Discriminative vs Generative models**
 
-Machine learning models can be broadly classified into two categories: discriminative and generative models (as one of ways to classify ML models).
+Machine learning models can be classified into two categories: discriminative and generative models (as one of many ways to classify ML models).
 
 <p align="center">
   <img src="https://imgur.com/xjtCWqw.png" >
@@ -24,13 +24,13 @@ Machine learning models can be broadly classified into two categories: discrimin
   <i>Categories of Machine Learning</i>
 </p>
 
-Discriminative models base on input features x to predict label or value of output y (e.g. classification, regression). The predicted value is a conditional probability based on input features: `P(y|x)`. For example in binary classification:
+`Discriminative models` base on input features x to predict label or value of output y (e.g. classification, regression). The predicted value is a conditional probability based on input features: `P(y|x)`. For example in binary classification:
 
 ```math
 p(y|\mathbf{x}) = \frac{1}{1+e^{-\mathbf{w}^\intercal\mathbf{x}}}
 ```
 
-Generative models, on the other hand, try to learn the joint probability distribution `P(x|y)` of the input features x and the label y. The models will concentrate on finding what is the input features properties when we already know the label y. Generative models based on `Bayes theorem`:
+Generative models, on the other hand, try to learn the probability distribution `P(x|y)` of the input features x and the label y. The models will concentrate on finding what is the input features properties when we already know the label y. Generative models usually based on `Bayes theorem`:
 
 ```math
 P(x|y) = \frac{P(y|x)P(x)}{P(y)}
@@ -51,9 +51,9 @@ For example, we have a dataset of bad dept with 2 input features x1, x2 and 1 ou
 
 There are two types of generative models: explicit and implicit models.
 
-- Explicit model: try to find probability distribution of input features x base on a pre-assumed probability distribution function of the input. To generate new samples, we just need to sample from the probability distribution function of the input.
+- `Explicit model`: try to find probability distribution of input features x base on a pre-assumed probability distribution function of the input. To generate new samples, we just need to sample from the probability distribution function of the input.
 
-- Implicit model: a simulator model that can generate new samples that look like the training data. New samples are generated directly from the model without any pre-assumed probability distribution function of the input.
+- `Implicit model`: a simulator model that can generate new samples that look like the training data. New samples are generated directly from the model without any pre-assumed probability distribution function of the input.
 
 <p align="center">
   <img src="https://imgur.com/MelJzGj.png" >
@@ -61,31 +61,36 @@ There are two types of generative models: explicit and implicit models.
   <i>Types of Generative models</i>
 </p>
 
+GAN is an implicit model because it is a simulator model that can generate new samples that look like the training data. New samples are generated directly from the model without any pre-assumed probability distribution function of the input.
+
 ## **2. GANs architecture**
 
 ### **2.1. GANs intuition**
 
 GANs intuition based on `zero-sum non-cooperative game`.
 
-- In this game, there are two players and there will be one winner and one loser.
-- In each turn, both of them need to maximize their own utility (or minimize their own loss).
-- At a time, the game will reach a equilibrium point where neither of them can improve their utility (or loss) by changing their strategy. We call that point `Nash equilibrium`.
+- Non-cooperative game - Players act independently and selfishly without cooperating with each other.
+- Zero-sum - The total benefit of all players in the game always equals zero or the reward of one player is exactly balanced by the losses of the other(s). So one player can only benefit at the expense of others.
+- Players' goals are opposed - the benefits of one player must harm the other(s). There is no possibility of a win-win outcome for all players.
+- At a time, the game will reach a equilibrium point where neither of them can improve their benefit (or loss) by changing their strategy. We call that point `Nash equilibrium`.
 
-The generator network takes random input (noise) and generates samples, such as images, text, or audio that look same as the training data it was trained on. The goal of the generator is to produce samples that are indistinguishable from real data.
+In GANs, we have 2 players: Generator and Discriminator.
 
-The discriminator network tries to distinguish between real and generated samples. It is trained with real samples from the training data and generated samples from the generator. Its objective is to correctly classify real data as real and generated data as fake.
+- The generator network takes random input (noise) and generates samples, such as images, text, or audio that look same as the training data it was trained on. The goal of the generator is to produce samples that are indistinguishable from real data.
+
+- The discriminator network tries to distinguish between real and generated samples. It is trained with real samples from the training data and generated samples from the generator. Its objective is to correctly classify real data as real and generated data as fake.
 
 The training process is an adversarial game between the generator and the discriminator.
 
 - The generator aims to produce more realistic samples that fool the discriminator.
 - The discriminator tries to improve its ability to distinguish between real and generated data.
-- This adversarial training pushes both networks to improve over time.
+- This adversarial training will improve both over time.
 - Ideally, this process converges to a point where the generator is capable of generating high-quality samples that are difficult for the discriminator to distinguish from real data (Nash equilibrium).
 
 <p align="center">
   <img src="https://i0.wp.com/nttuan8.com/wp-content/uploads/2019/11/d_rk.png?resize=768%2C357&ssl=1" >
   <br>
-  <i>GANs intuition</i>
+  <i>GANs flowchart</i>
 </p>
 
 <p align="center">
@@ -99,7 +104,7 @@ The training process is an adversarial game between the generator and the discri
 <p align="center">
   <img src="https://imgur.com/a4p9G3d.png" >
   <br>
-  <i>Generator architecture</i>
+  <i>Generator architecture example</i>
 </p>
 
 In basic, Generator is a neural network that takes random input (noise) and generates samples, such as images, text, or audio that look same as the training data it was trained on.
@@ -113,7 +118,7 @@ From the input ramdom noise z, generater is a deep neural network that generates
 <p align="center">
   <img src="https://imgur.com/vGjX6DM.png" >
   <br>
-  <i>Discriminator architecture</i>
+  <i>Discriminator architecture example</i>
 </p>
 
 Discriminator is a neural network that tries to distinguish between real and generated samples. It is trained with real samples from the training data and generated samples from the generator. Its objective is to correctly classify real data as real and generated data as fake.
@@ -121,7 +126,7 @@ Discriminator is a neural network that tries to distinguish between real and gen
 Label is real if input data is real data from training data. Label is fake if input data is generated data from generator. So discriminator is simply a binary classifier.
 
 <p align="center">
-  <img src="https://images.viblo.asia/27269c25-dc53-4f25-ba16-5c583747156e.png" >
+  <img src="https://cdn.clickworker.com/wp-content/uploads/2022/11/Generative-Adversarial-Networks-Architecture-scaled.jpg" >
   <br>
   <i>Example of GANs architecture</i>
 </p>
@@ -166,10 +171,10 @@ This cost function is convex, so Gradient Descent (or any other optimization alg
 The discriminator is a binary classifier to distinguish if the input $`x`$ is real (from real data) or fake (from the generator). Typically, the discriminator outputs a scalar prediction $`o\in\mathbb R`$ for each input $`x`$, by apply sigmoid function to obtain the predicted probability:
 
 ```math
-D(\mathbf x) = \frac{1}{1+e^{-o}}
+D(\mathbf x) = o = \frac{1}{1 + e^{-\mathbf{w}^\intercal\mathbf{x}}}
 ```
 
-Assume the label y for the true data is 1 and 0 for the fake data and we asume that generator G is fixed in this phase. Our objective is to minimize the cross-entropy loss, i.e.,
+Assume the label y for the true data is 1 and 0 for the fake data (generated data) and we asume that generator G is fixed when training Discriminator. Our objective is to minimize the cross-entropy loss:
 
 ```math
 J(\theta) = -\frac{1}{m} \sum_{i=1}^{m} [y_i log(\hat{p}_i) + (1 - y_i) log(1 - \hat{p}_i)]
@@ -180,7 +185,7 @@ In which:
 - $`\hat{p}_i = D(\mathbf x_i)`$ is the predicted probability of the discriminator for the input $`\mathbf x_i`$.
 - $`y_i`$ is the label of the input $`\mathbf x_i`$. If $`\mathbf x_i`$ is a real data, then $`y_i = 1`$ and $`\mathbf x_i`$ is a fake data, then $`y_i = 0`$.
 
-Here, we have 2 cases for each input $`\mathbf x_i`$:
+So, we have 2 cases for each input $`\mathbf x_i`$:
 
 - If $`\mathbf x_i`$ is a real data, then $`y_i = 1`$ and $`\hat{p}_i = D(\mathbf x_i)`$. So the loss function is:
 
@@ -213,13 +218,13 @@ In the above equation:
 
 #### **2.4.3. Generator loss**
 
-The goal of this phase is to strengthen the Generator's image creation ability so that the image it produces is as realistic as possible. We asume in this phase, the discriminator is fixed.
+The goal of training Generator is to strengthen the Generator's image creation ability so that the image it produces is as realistic as possible. We asume in this phase, the discriminator is fixed.
 
-For the generator, it first draws some parameter $`\mathbf z\in\mathbb R^d`$ from a source of randomness, e.g., a normal distribution $`\mathbf z \sim \mathcal{N} (0, 1)`$. We often call z as the latent variable.
+For the generator, it first draws some parameter $`\mathbf z\in\mathbb R^d`$ from a source of randomness, e.g., a normal distribution $`\mathbf z \sim \mathcal{N} (0, 1)`$. We often call z as the `latent variable`.
 
 It then applies a function to generate $`\mathbf x'=G(\mathbf z)`$. The goal of the generator is to fool the discriminator to classify $`\mathbf x'=G(\mathbf z)`$ as true data, i.e., we want $`D( G(\mathbf z)) \approx 1`$.
 
-In other words, for a given discriminator D, we update the parameters of the generator G to maximize the cross-entropy loss when y = 0.
+In other words, for a given fixed discriminator D, we update the parameters of the generator G to maximize the cross-entropy loss when y = 0. Which means we try to maximize $`D(G(\mathbf z))`$:
 
 ```math
 \max_G \{ - (1-y) \log(1-D(G(\mathbf z))) \} = \max_G \{ - \log(1-D(G(\mathbf z))) \}.
@@ -253,12 +258,10 @@ In training process, we alternate between training the discriminator and the gen
 <p align="center">
   <img src="https://machinelearningmastery.com/wp-content/uploads/2019/05/Summary-of-the-Generative-Adversarial-Network-Training-Algorithm-1024x669.png" >
   <br>
-  <i>Training process</i>
+  <i>GANs adversarial training process</i>
 </p>
 
-Note that when train the discriminator, we need to freeze the parameters of generator and vice versa.
-
-The training process is continued until the discriminator cannot distinguish between real and fake data or we reach the maximum number of epochs.
+Note that when train the discriminator, we need to freeze the parameters of generator and vice versa. The training process is continued until the discriminator cannot distinguish between real and fake data or we reach the maximum number of epochs.
 
 #### **Generator diminished gradient**
 
@@ -306,4 +309,4 @@ Chanllenges of GANs:
 - Mode collapse
 - Vanishing gradient
 - Convergence
-- ...
+- Can't control the output (conditioning, style,...) which will be solved by GANs variants model.
