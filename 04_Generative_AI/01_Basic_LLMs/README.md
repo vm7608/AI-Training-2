@@ -125,7 +125,7 @@ Alternatively, an `RNN model with GRU trains faster but performs poorly on large
   <i>Vanishing Gradient Problem</i>
 </p>
 
-The v`anishing gradient problem is encountered in ANN` using gradient-based learning methods with backpropagation. In such methods, during each iteration of training, the weights receive an update proportional to the partial derivative of the error function concerning the current weight.
+The `vanishing gradient problem is encountered in ANN` using gradient-based learning methods with backpropagation. In such methods, during each iteration of training, the weights receive an update proportional to the partial derivative of the error function concerning the current weight.
 
 In some cases, like recurrent networks, the gradient becomes vanishingly small. This effectively prevents the weights from changing their value. This may even `prevent the neural network from training further`. These issues make the training of RNNs for NLP tasks practically inefficient.
 
@@ -239,7 +239,9 @@ But one powerful strategy to get the model to produce better outcomes is to incl
   <i>Summary of in-context learning</i>
 </p>
 
-A drawback of in-context learning is that out context window have a limit amount of token so that we can't include too many examples. Generally, if you find that your model isn't performing well when including five or six examples, you should try fine-tuning your model instead. Fine-tuning performs additional training on the model using new data to make it more capable of the task you want it to perform.
+A drawback of in-context learning is that out context window have a limit amount of token so that we can't include too many examples. And also, in-context learning may not always work well for small models.
+
+Generally, if you find that your model isn't performing well when including five or six examples, you should try fine-tuning your model instead. Fine-tuning performs additional training on the model using new data to make it more capable of the task you want it to perform.
 
 ### **3.2. Generative configuration parameters for inference**
 
@@ -327,7 +329,7 @@ The basic Project lifecycle of a Generative AI deals with 4 core principles
 
 The initial training process for LLMs is often referred to as pre-training. LLMs encode a deep statistical representation of language. This understanding is developed during the models pre-training phase when the model learns from vast amounts of unstructured textual data. This can be gigabytes, terabytes, and even petabytes of text. This data is pulled from many sources, including scrapes off the Internet and corpora of texts that have been assembled specifically for training language models.
 
-In this self-supervised learning step, the model internalizes the patterns and structures present in the language. These patterns then enable the model to complete its training objective, which depends on the architecture of the model. During pre-training, the model weights get updated to minimize the loss of the training objective. The encoder generates an embedding or vector representation for each token. Pre-training also requires a large amount of compute and the use of GPUs. 
+In this self-supervised learning step, the model internalizes the patterns and structures present in the language. These patterns then enable the model to complete its training objective, which depends on the architecture of the model. During pre-training, the model weights get updated to minimize the loss of the training objective. The encoder generates an embedding or vector representation for each token. Pre-training also requires a large amount of compute and the use of GPUs.
 
 Note, when you scrape training data from public sites such as the Internet, you often need to process the data to increase quality, address bias, and remove other harmful content. As a result of this data quality curation, often only 1-3% of tokens are used for pre-training.
 
@@ -339,7 +341,7 @@ Note, when you scrape training data from public sites such as the Internet, you 
 
 #### **3.4.2. Transformer model types**
 
-There were three variance of the transformer model: encoder-only, encoder-decoder models, and decode-only. Each of these is trained on a different objective, and so learns how to carry out different tasks. 
+There were three variance of the transformer model: encoder-only, encoder-decoder models, and decode-only. Each of these is trained on a different objective, and so learns how to carry out different tasks.
 
 <p align="center">
   <img src="https://live.staticflickr.com/65535/53214984298_f977d52c0c_o.png" >
@@ -385,11 +387,124 @@ To summarize, here's a quick comparison of the different model architectures and
 
 ## **4. Fine-tuning LLMs**
 
-### **4.1. Instruction Tuning**
+Earlier, we see the main drawback of in-context learning is that context window have a limit amount of token so that we can't include too many examples. And also, in-context learning may not always work well for small models even when we include five or six examples.
 
-#### **4.1.1. Instruction fine-tuning for a single task**
+Luckily, we have another technique called `fine-tuning` to solve this problem. Fine-tuning performs additional training on the model using new data to make it more capable of the task you want it to perform.
 
-#### **4.1.2. Instruction fine-tuning for multiple tasks**
+### **4.1. Fine-tuning LLMs at a high level**
+
+In contrast to pre-training, where you train the LLM using vast amounts of unstructured textual data via selfsupervised learning, fine-tuning is a supervised learning process where you use a data set of labeled examples to update the weights of the LLM. The labeled examples are prompt - completion pairs, the fine-tuning process extends the training of the model to improve its ability to generate good completions for a specific task.
+
+<p align="center">
+  <img src="https://live.staticflickr.com/65535/53215573767_45935edce0_o.png" >
+  <br>
+  <i>LLM fine-tuning at a high level</i>
+</p>
+
+### **4.2. Instruction Tuning**
+
+#### **4.2.1. What is Instruction Tuning?**
+
+One strategy, known as instruction fine tuning, is particularly good at improving a model's performance on a variety of tasks. Instruction fine-tuning trains the model using examples that demonstrate how it should respond to a specific instruction.
+
+The instruction in both examples is classify this review, and the desired completion is a text string that starts with sentiment followed by either positive or negative. The data set you use for training includes many pairs of prompt completion examples for the task you're interested in, each of which includes an instruction. 
+
+For example, if you want to fine tune your model to improve its summarization ability, you'd build up a data set of examples that begin with the instruction summarize, the following text or a similar phrase. And if you are improving the model's translation skills, your examples would include instructions like translate this sentence. These prompt completion examples allow the model to learn to generate responses that follow the given instructions.
+
+<p align="center">
+  <img src="https://live.staticflickr.com/65535/53216840104_7c02740887_o.png" >
+  <br>
+  <i>Instruction fine-tuning</i>
+</p>
+
+Instruction fine-tuning, where all of the model's weights are updated is known as full fine-tuning. The process results in a new version of the model with updated weights. It is important to note that just like pre-training, full fine tuning requires enough memory and compute budget to store and process all the gradients, optimizers and other components that are being updated during training.
+
+#### **4.2.2. Prepare training data**
+
+The first step is to prepare your training data. There are many publicly available datasets that have been used to train earlier generations of language models, although most of them are not formatted as instructions. Luckily, developers have assembled prompt template libraries that can be used to take existing datasets, for example, the large data set of Amazon product reviews and turn them into instruction prompt datasets for fine-tuning. Prompt template libraries include many templates for different tasks and different data sets. Here are three prompts that are designed to work with the Amazon reviews dataset and that can be used to fine tune models for classification, text generation and text summarization tasks.
+
+<p align="center">
+  <img src="https://live.staticflickr.com/65535/53216451661_b978510587_o.png" >
+  <br>
+  <i>Sample prompt instruction templates</i>
+</p>
+
+You can see that in each case you pass the original review, here called review_body, to the template, where it gets inserted into the text that starts with an instruction like predict the associated rating, generate a star review, or give a short sentence describing the following product review. The result is a prompt that now contains both an instruction and the example from the data set.
+
+Once you have your instruction data set ready, as with standard supervised learning, you divide the data set into training validation and test splits.
+
+<p align="center">
+  <img src="https://live.staticflickr.com/65535/53216840099_ea58bbf788_o.png" >
+  <br>
+  <i>Split prepared instruction data into train/val/test</i>
+</p>
+
+#### **4.2.3. Instruction tuning process**
+
+<p align="center">
+  <img src="https://live.staticflickr.com/65535/53216451651_688d9dcc8a_o.png" >
+  <br>
+  <i>Overall process of Instruction tuning LLMs</i>
+</p>
+
+During fine tuning, you select prompts from your training data set and pass them to the LLM, which then generates completions. Next, you compare the LLM completion with the response specified in the training data.
+
+You can see here that the model didn't do a great job, it classified the review as neutral, which is a bit of an understatement. The review is clearly very positive. Remember that the output of an LLM is a probability distribution across tokens. So you can compare the distribution of the completion and that of the training label and use the standard crossentropy function to calculate loss between the two token distributions. And then use the calculated loss to update your model weights in standard backpropagation. You'll do this for many batches of prompt completion pairs and over several epochs, update the weights so that the model's performance on the task improves.
+
+As in standard supervised learning, you can define separate evaluation steps to measure your LLM performance using the holdout validation data set. This will give you the validation accuracy, and after you've completed your fine tuning, you can perform a final performance evaluation using the holdout test data set. This will give you the test accuracy. The
+
+fine-tuning process results in a new version of the base model, often called an instruct model that is better at the tasks you are interested in. Fine-tuning with instruction prompts is the most common way to fine-tune LLMs these days. From this point on, when you hear or see the term fine-tuning, you can assume that it always means instruction fine tuning.
+
+#### **4.2.4. Instruction fine-tuning for a single task**
+
+While LLMs can perform many different language tasks within a single model, your application may only need to perform a single task. In this case, you can fine-tune a pre-trained model to improve performance on only the task that is of interest to you.
+
+<p align="center">
+  <img src="https://live.staticflickr.com/65535/53217005155_4fb40f6475_o.png" >
+  <br>
+  <i>Instruction fine-tuning for a single task</i>
+</p>
+
+For example, summarization using a dataset of examples for that task. Interestingly, good results can be achieved with relatively few examples. Often just 500-1,000 examples can result in good performance in contrast to the billions of pieces of texts that the model saw during pre-training.
+
+However, there is a potential downside to fine-tuning on a single task. The process may lead to a phenomenon called `catastrophic forgetting`. Catastrophic forgetting leads to great performance on the single fine-tuning task, it can degrade performance on other tasks. This happens because the full fine-tuning process modifies the weights of the original LLM.
+
+<p align="center">
+  <img src="https://live.staticflickr.com/65535/53216887474_e4db33a37e_o.png" >
+  <img src="https://live.staticflickr.com/65535/53215621407_717a764aaf_o.png" >
+  <br>
+  <i>Catastrophic forgetting example</i>
+</p>
+
+For the above example, while fine-tuning can improve the ability of a model to perform sentiment analysis on a review and result in a quality completion, the model may forget how to do other tasks.
+
+How to avoid catastrophic forgetting? First of all, it's important to decide whether catastrophic forgetting actually impacts your use case.
+
+- If all you need is reliable performance on the single task you fine-tuned on, it may not be an issue that the model can't generalize to other tasks.
+- If you do want or need the model to maintain its multitask generalized capabilities, you can perform fine-tuning on multiple tasks at one time. Good multitask fine-tuning may require 50-100,000 examples across many tasks, and so will require more data and compute to train.
+- Our second option is to perform parameter efficient fine-tuning (PEFT) instead of full fine-tuning. PEFT shows greater robustness to catastrophic forgetting since this technique preserves the weights of the original LLM and trains only a small number of task-specific adapter layers and parameters. We will discuss about PEFT in the later part.
+
+#### **4.2.5. Instruction fine-tuning for multiple tasks**
+
+Multitask fine-tuning is an extension of single task fine-tuning, where the training dataset is comprised of example inputs and outputs for multiple tasks.
+
+Here, the dataset contains examples that instruct the model to carry out a variety of tasks, including summarization, review rating, code translation, and entity recognition. You train the model on this mixed dataset so that it can improve the performance of the model on all the tasks simultaneously, thus avoiding the issue of catastrophic forgetting. Over many epochs of training, the calculated losses across examples are used to update the weights of the model, resulting in an instruction tuned model that is learned how to be good at many different tasks simultaneously.
+
+One drawback to multitask fine-tuning is that it requires a lot of data. You may need as many as 50-100,000 examples in your training set. However, it can be really worthwhile and worth the effort to assemble this data. The resulting models are often very capable and suitable for use in situations where good performance at many tasks is desirable.
+
+<p align="center">
+  <img src="https://live.staticflickr.com/65535/53216513706_98a01f27af_o.png" >
+  <br>
+  <i>Instruction fine-tuning for a multiple tasks</i>
+</p>
+
+Instruct model variance differ based on the datasets and tasks used during fine-tuning. One example is the `FLAN family of models`. FLAN, which stands for fine-tuned language net, is a specific set of instructions used to fine-tune different models. One example of a prompt dataset used for summarization tasks is SAMSum which is a dataset with 16,000 messenger like conversations with summaries.
+
+<p align="center">
+  <img src="https://live.staticflickr.com/65535/53216902639_e0b7d74f26_o.png" >
+  <br>
+  <i>SAMSum prompt template</i>
+</p>
 
 ### **4.2. Parameter efficient fine-tuning (PEFT)**
 
