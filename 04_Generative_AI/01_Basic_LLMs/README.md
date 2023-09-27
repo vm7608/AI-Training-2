@@ -407,7 +407,7 @@ In contrast to pre-training, where you train the LLM using vast amounts of unstr
 
 One strategy, known as instruction fine tuning, is particularly good at improving a model's performance on a variety of tasks. Instruction fine-tuning trains the model using examples that demonstrate how it should respond to a specific instruction.
 
-The instruction in both examples is classify this review, and the desired completion is a text string that starts with sentiment followed by either positive or negative. The data set you use for training includes many pairs of prompt completion examples for the task you're interested in, each of which includes an instruction. 
+The instruction in both examples is classify this review, and the desired completion is a text string that starts with sentiment followed by either positive or negative. The data set you use for training includes many pairs of prompt completion examples for the task you're interested in, each of which includes an instruction.
 
 For example, if you want to fine tune your model to improve its summarization ability, you'd build up a data set of examples that begin with the instruction summarize, the following text or a similar phrase. And if you are improving the model's translation skills, your examples would include instructions like translate this sentence. These prompt completion examples allow the model to learn to generate responses that follow the given instructions.
 
@@ -508,9 +508,115 @@ Instruct model variance differ based on the datasets and tasks used during fine-
 
 ### **4.2. Parameter efficient fine-tuning (PEFT)**
 
+#### **4.2.1. PEFT vs Full Fine-tuning**
+
+Training LLMs is computationally intensive. Full fine-tuning requires memory not just to store the model, but various other parameters that are required during the training process. Even if your computer can hold the model weights, which are now on the order of hundreds of gigabytes for the largest models, you must also be able to allocate memory for optimizer states, gradients, forward activations, and temporary memory throughout the training process. These additional components can be many times larger than the model and can quickly become too large to handle on consumer hardware.
+
+<p align="center">
+  <img src="https://live.staticflickr.com/65535/53216863203_af42ce91ec_o.png" >
+  <br>
+  <i>Full fine-tuning problems</i>
+</p>
+
+In contrast to full fine-tuning where every model weight is updated during supervised learning, PEFT methods only update a small subset of parameters. Some path techniques freeze most of the model weights and focus on fine tuning a subset of existing model parameters, for example, particular layers or components. Other techniques don't touch the original model weights at all, and instead add a small number of new parameters or layers and fine-tune only the new components.
+
+<p align="center">
+  <img src="https://live.staticflickr.com/65535/53216551471_e05a85364a_o.png" >
+  <img src="https://live.staticflickr.com/65535/53215675922_52dd0ab86f_o.png" >
+  <br>
+  <i>PEFT methods is more efficient than full fine-tuning</i>
+</p>
+
+With PEFT, most or all of the LLM weights are kept frozen. As a result, the number of trained parameters is much smaller than the number of parameters in the original LLM. In some cases, just 15-20% of the original LLM weights. This makes the memory requirements for training much more manageable. And because the original LLM is only slightly modified or left unchanged, PEFT is less prone to the catastrophic forgetting problems of full fine-tuning.
+
+Full fine-tuning results in a new version of the model for every task you train on. Each of these is the same size as the original model, so it can create an expensive storage problem if you're fine-tuning for multiple tasks. With PEFT, you train only a small number of weights, which results in a much smaller footprint overall, as small as megabytes depending on the task. The new parameters are combined with the original LLM weights for inference. The PEFT weights are trained for each task and can be easily swapped out for inference, allowing efficient adaptation of the original model to multiple tasks.
+
+<p align="center">
+  <img src="https://live.staticflickr.com/65535/53216940849_49a458fdb6_o.png" >
+  <img src="https://live.staticflickr.com/65535/53216863208_6d72bc0dc9_o.png" >
+  <br>
+  <i>PEFT saves space and is more flexible than full fine-tuning</i>
+</p>
+
+There are several methods you can use for parameter efficient fine-tuning, each with trade-offs on parameter efficiency, memory efficiency, training speed, model quality, and inference costs. There are three main classes of PEFT methods.
+
+- `Selective methods` are those that fine-tune only a subset of the original LLM parameters. There are several approaches that you can take to identify which parameters you want to update. You have the option to train only certain components of the model or specific layers, or even individual parameter types. Researchers have found that the performance of these methods is mixed and there are significant trade-offs between parameter efficiency and compute efficiency so we will not discuss about it in this report.
+
+- `Reparameterization methods` also work with the original LLM parameters, but reduce the number of parameters to train by creating new low rank transformations of the original network weights. A commonly used technique of this type is LoRA.
+
+- `Additive methods` carry out fine-tuning by keeping all of the original LLM weights frozen and introducing new trainable components. Here there are two main approaches.
+  - `Adapter methods` add new trainable layers to the architecture of the model, typically inside the encoder or decoder components after the attention or feed-forward layers.
+  - `Soft prompt methods`, on the other hand, keep the model architecture fixed and frozen, and focus on manipulating the input to achieve better performance. This can be done by adding trainable parameters to the prompt embeddings or keeping the input fixed and retraining the embedding weights. In this report, we'll take a look at a specific soft prompts technique called `prompt tuning`.
+
+<p align="center">
+  <img src="https://live.staticflickr.com/65535/53216908848_4e35e9e5c7_o.png" >
+  <br>
+  <i>PEFT methods</i>
+</p>
+
 #### **4.2.1. PEFT techniques 1: LORA**
 
+`Low-rank Adaptation`, or `LoRA` for short, is a parameter-efficient fine-tuning technique that falls into the reparameterization category.
+
+LoRA is a strategy that reduces the number of parameters to be trained during fine-tuning by freezing all of the original model parameters and then injecting a pair of rank decomposition matrices alongside the original weights. The dimensions of the smaller matrices are set so that their product is a matrix with the same dimensions as the weights they're modifying. You then keep the original weights of the LLM frozen and train the smaller matrices using the same supervised learning process.
+
+For inference, the two low-rank matrices are multiplied together to create a matrix with the same dimensions as the frozen weights. Then, we add this to the original weights and replace them in the model with these updated values. You now have a LoRA fine-tuned model that can carry out your specific task. Because this model has the same number of parameters as the original, there is little to no impact on inference latency.
+
+<p align="center">
+  <img src="https://live.staticflickr.com/65535/53216598686_4a2962010e_o.png" >
+  <br>
+  <i>LoRA Process</i>
+</p>
+
+Researchers have found that applying LoRA to just the self-attention layers of the model is often enough to fine-tune for a task and achieve performance gains. However, in principle, you can also use LoRA on other components like the feed-forward layers. But since most of the parameters of LLMs are in the attention layers, you get the biggest savings in trainable parameters by applying LoRA to these weights matrices.
+
+For an example that used in the transformer architecture described in the Attention is All You Need paper. By updating the weights of these new low-rank matrices instead of the original weights, we can reduce 86% parameters in training.
+
+<p align="center">
+  <img src="https://live.staticflickr.com/65535/53216912613_57662f24a4_o.png" >
+  <br>
+  <i>LoRA Efficient example</i>
+</p>
+
+Since the rank-decomposition matrices are small, you can fine-tune a different set for each task and then switch them out at inference time by updating the weights. Suppose you train a pair of LoRA matrices for a specific task A. To carry out inference on this task, you would multiply these matrices together and then add the resulting matrix to the original frozen weights. You then take this new summed weights matrix and replace the original weights where they appear in your model. You can then use this model to carry out inference on Task A. If instead, you want to carry out a different task, say Task B, you simply take the LoRA matrices you trained for this task, calculate their product, and then add this matrix to the original weights and update the model again.
+
+<p align="center">
+  <img src="https://live.staticflickr.com/65535/53217105405_e9c0df6177_o.png" >
+  <br>
+  <i>LoRA Adaptable for multiple tasks</i>
+</p>
+
+Reseacher has clarify that LoRA fine-tuning is not always as effective as full fine-tuning. In some cases, it can lead to a loss in performance. However, it is a good trade off when you need to fine-tune a model for a task and you have limited compute resources. It can also be a good option when you want to fine-tune a model for multiple tasks and you want to be able to switch between tasks quickly.
+
+Choosing LoRA rank is a hyperparameter that you can tune. In general, the higher the rank, the more parameters you have to train, and the more compute you need. However, higher rank matrices can capture more information from the original weights and so can lead to better performance. But there is a point that the performance gain is not worth the additional compute cost. So you should experiment with different rank values to find the best trade-off between performance and compute efficiency.
+
 #### **4.2.2. PEFT techniques 2: Soft Prompt Tuning**
+
+Prompt tuning sounds a bit like prompt engineering, but they are quite different from each other. With prompt engineering, you work on the language of your prompt to get the completion you want. This could be as simple as trying different words or phrases or more complex, like including examples for one or Few-shot Inference. The goal is to help the model understand the nature of the task you're asking it to carry out and to generate a better completion. With prompt tuning, you add additional trainable tokens to your prompt and leave it up to the supervised learning process to determine their optimal values.
+
+<p align="center">
+  <img src="https://live.staticflickr.com/65535/53217013089_278acb5dbd_o.png" >
+  <br>
+  <i>Prompt tuning adds trainable “soft prompt” to inputs</i>
+</p>
+
+The set of trainable tokens is called a soft prompt, and it gets prepended to embedding vectors that represent your input text. The soft prompt vectors have the same length as the embedding vectors of the language tokens. And including somewhere between 20 and 100 virtual tokens can be sufficient for good performance. The tokens that represent natural language are hard in the sense that they each correspond to a fixed location in the embedding vector space. However, the soft prompts are not fixed discrete words of natural language. Instead, you can think of them as virtual tokens that can take on any value within the continuous multidimensional embedding space. And through supervised learning, the model learns the values for these virtual tokens that maximize performance for a given task.
+
+In full fine tuning, the training data set consists of input prompts and output completions or labels. The weights of the large language model are updated during supervised learning. In contrast with prompt tuning, the weights of the large language model are frozen and the underlying model does not get updated. Instead, the embedding vectors of the soft prompt gets updated over time to optimize the model's completion of the prompt. Prompt tuning is a very parameter efficient strategy because only a few parameters are being trained. In contrast with the millions to billions of parameters in full fine tuning.
+
+<p align="center">
+  <img src="https://live.staticflickr.com/65535/53216933748_0cf6db987c_o.png" >
+  <br>
+  <i>Full Fine-tuning vs prompt tuning</i>
+</p>
+
+You can train a different set of soft prompts for each task and then easily swap them out at inference time. You can train a set of soft prompts for one task and a different set for another. To use them for inference, you prepend your input prompt with the learned tokens to switch to another task, you simply change the soft prompt. Soft prompts are very small on disk, so this kind of fine tuning is extremely efficient and flexible. You'll notice the same LLM is used for all tasks, all you have to do is switch out the soft prompts at inference time.
+
+<p align="center">
+  <img src="https://live.staticflickr.com/65535/53216623831_3bb980dd6a_o.png" >
+  <br>
+  <i>Soft prompt tuning for multiple task</i>
+</p>
 
 ## **5. Reinforcement Learning From Human Feedback (RLHF)**
 
@@ -526,4 +632,4 @@ Instruct model variance differ based on the datasets and tasks used during fine-
 
 ## **7. References**
 
-- To be defined
+[1] [Generative AI with Large Language Models Course of DeepLearning.AI on Coursera](https://www.coursera.org/learn/generative-ai-with-llms?utm_campaign=WebsiteCoursesGAIA&utm_medium=institutions&utm_source=deeplearning-ai)
