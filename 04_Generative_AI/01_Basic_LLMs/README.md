@@ -1,6 +1,6 @@
 # **LARGE LANGUAGE MODELS**
 
-## **1.Overview and Introduction**
+## **1. Overview and Introduction**
 
 ### **1.1. Language Models (LMs)**
 
