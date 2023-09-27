@@ -814,7 +814,7 @@ This approach offers subjective feedback on the model’s performance. However, 
   <i>Example of The human evaluator uses both models simultaneously to decide which model is better</i>
 </p>
 
-### **6.4. Benchmarking**
+### **6.5. Benchmarking**
 
 Beside the above evaluation methods, benchmarking is also a popular method for evaluating LLMs. Benchmarking is the process of comparing the performance of a model against a set of standard tasks or datasets. Benchmarking provides a standardized way to compare the performance of different models. It also helps to identify the strengths and weaknesses of a model and to understand how it performs on different tasks. However, benchmarking has some limitations. For example, it can be difficult to design a benchmark that captures the full range of a model’s capabilities. Additionally, benchmarking may not be able to capture the nuances of a model’s performance on a specific task. Therefore, it is important to use benchmarking in conjunction with other evaluation methods.
 
@@ -826,7 +826,7 @@ Beside the above evaluation methods, benchmarking is also a popular method for e
 | OpenAI Moderation API | Filter out harmful or unsafe content | <https://platform.openai.com/docs/api-reference/moderations> |
 | MMLU | Language understanding across various tasks and domains | <https://github.com/hendrycks/test> |
 
-### **6.5. Challenges with existing LLM evaluation methods**
+### **6.6. Challenges with existing LLM evaluation methods**
 
 While existing evaluation methods for Large Language Models (LLMs) provide valuable insights, they are not perfect. The common issues associated with them are:
 
