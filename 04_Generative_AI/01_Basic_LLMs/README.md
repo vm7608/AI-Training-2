@@ -757,14 +757,95 @@ There are also several different algorithms that you can use for this part of th
 
 ## **6. Evaluating LLMs**
 
-### **6.1. Intrinsic Methods**
+### **6.1. ROUGE (Recall-Oriented Understudy for Gissing Evaluation)**
 
-### **6.2. Extrinsic Methods**
+ROUGE is a set of metrics used for evaluating the quality of summaries. It compares the generated summary with one or more reference summaries and calculates precision, recall, and F1-score (Figure 4). ROUGE scores provide insights into the summary generation capabilities of the language model.
 
-### **6.3. Benchmarking**
+<p align="center">
+  <img src="https://live.staticflickr.com/65535/53216054612_8e9fb4cbd1_o.png" >
+  <img src="https://live.staticflickr.com/65535/53216054617_79f398acba_o.png" >
+  <img src="https://live.staticflickr.com/65535/53217237518_726d314ee3_o.png" >
+  <br>
+  <i>ROUGE examples</i>
+</p>
 
-### **6.4. Limitations and potential biases**
+### **6.2. BLEU (Bilingual Evaluation Understudy)**
+
+BLEU is a metric commonly used in machine translation tasks. It compares the generated output with one or more reference translations and measures the similarity between them. BLEU scores range from 0 to 1, with higher scores indicating better performance.
+
+<p align="center">
+  <img src="https://live.staticflickr.com/65535/53217317484_624f7f62f5_o.png" >
+  <br>
+  <i>BLEU example</i>
+</p>
+
+### **6.3. Perplexity**
+
+The most commonly used measure of a language model's performance is its perplexity on a given text corpus. Perplexity is a measure of how well a model is able to predict the contents of a dataset; the higher the likelihood the model assigns to the dataset, the lower the perplexity. Mathematically, perplexity is defined as the exponential of the average negative log likelihood per token:
+
+```math
+log(Permplexity) = -\frac{1}{N}\sum_{i=1}^{N}log(P(token_i|context for token_i)) = -\frac{1}{N}\sum_{i=1}^{N}log(P(token_i|token_1, token_2, ..., token_{i-1}))
+```
+
+here N is the number of tokens in the text corpus, and "context for token i" depends on the specific type of LLM used. If the LLM is autoregressive, then "context for token i" is the segment of text appearing before token i. If the LLM is masked, then "context for token i" is the segment of text surrounding token i.
+
+Because language models may overfit to their training data, models are usually evaluated by their perplexity on a test set of unseen data. This presents particular challenges for the evaluation of large language models. As they are trained on increasingly large corpora of text largely scraped from the web, it becomes increasingly likely that models' training data inadvertently includes portions of any given test set.
+
+<p align="center">
+  <img src="https://images.surferseo.art/42b4e02c-2bfb-4955-bd5a-f55bf90465fb.png" >
+  <br>
+  <i>Perplexity example</i>
+</p>
+
+### **6.4. Human evaluation**
+
+The evaluation process includes enlisting human evaluators who assess the quality of the language model’s output. These evaluators rate 3 the generated responses based on different criteria, including:
+
+- Relevance
+- Fluency
+- Coherence
+- Overall quality.
+
+This approach offers subjective feedback on the model’s performance. However, it can be time-consuming and expensive, especially for large-scale evaluations.
+
+<p align="center">
+  <img src="https://images.surferseo.art/dc475e7f-26df-46e0-b5a2-ee2cc7f7f906.png" >
+  <br>
+  <i>Example of The human evaluator uses both models simultaneously to decide which model is better</i>
+</p>
+
+### **6.4. Benchmarking**
+
+Beside the above evaluation methods, benchmarking is also a popular method for evaluating LLMs. Benchmarking is the process of comparing the performance of a model against a set of standard tasks or datasets. Benchmarking provides a standardized way to compare the performance of different models. It also helps to identify the strengths and weaknesses of a model and to understand how it performs on different tasks. However, benchmarking has some limitations. For example, it can be difficult to design a benchmark that captures the full range of a model’s capabilities. Additionally, benchmarking may not be able to capture the nuances of a model’s performance on a specific task. Therefore, it is important to use benchmarking in conjunction with other evaluation methods.
+
+| Framework Name | Factors Considered for Evaluation | Url Link|
+| --- | --- | --- |
+| Big Bench | Generalization abilities | <https://github.com/google/BIG-bench> |
+| GLUE Benchmark | Grammar, Paraphrasing, Text Similarity, Inference, Textual Entailment, Resolving Pronoun References | <https://gluebenchmark.com/> |
+| SuperGLUE Benchmark | Natural Language Understanding, Reasoning, Understanding complex sentences beyond training data, Coherent and Well-Formed Natural Language Generation, Dialogue with Human Beings, Common Sense Reasoning (Everyday Scenarios and Social Norms and Conventions), Information Retrieval, Reading Comprehension | <https://super.gluebenchmark.com/> |
+| OpenAI Moderation API | Filter out harmful or unsafe content | <https://platform.openai.com/docs/api-reference/moderations> |
+| MMLU | Language understanding across various tasks and domains | <https://github.com/hendrycks/test> |
+
+### **6.5. Challenges with existing LLM evaluation methods**
+
+While existing evaluation methods for Large Language Models (LLMs) provide valuable insights, they are not perfect. The common issues associated with them are:
+
+- *Over-reliance on perplexity*: Perplexity measures how well a model predicts a given text but does not capture aspects such as coherence, relevance, or context understanding. Therefore, relying solely on perplexity may not provide a comprehensive assessment of an LLM’s quality.
+
+- *Subjectivity in human evaluations*: Human evaluation is a valuable method for assessing LLM outputs, but it can be subjective and prone to bias. Different human evaluators may have varying opinions, and the evaluation criteria may lack consistency. Additionally, human evaluation can be time-consuming and expensive, especially for large-scale evaluations.
+
+- *Limited reference data*: Some evaluation methods, such as BLEU or ROUGE, require reference data for comparison. However, obtaining high-quality reference data can be challenging, especially in scenarios where multiple acceptable responses exist or in open-ended tasks. Limited or biased reference data may not capture the full range of acceptable model outputs.
+
+- *Lack of diversity metrics*: Existing evaluation methods often don’t capture the diversity and creativity of LLM outputs. That’s because metrics that only focus on accuracy and relevance overlook the importance of generating diverse and novel responses. Evaluating diversity in LLM outputs remains an ongoing research challenge.
+
+- *Generalization to real-world scenarios*: Evaluation methods typically focus on specific benchmark datasets or tasks, which don’t fully reflect the challenges  of real-world applications. The evaluation on controlled datasets may not generalize well to diverse and dynamic contexts where LLMs are deployed.
+
+- *Adversarial attacks*: LLMs can be susceptible to adversarial attacks such as manipulation of model predictions and data poisoning, where carefully crafted input can mislead or deceive the model. Existing evaluation methods often do not account for such attacks, and robustness evaluation remains an active area of research.
 
 ## **7. References**
 
 [1] [Generative AI with Large Language Models Course of DeepLearning.AI on Coursera](https://www.coursera.org/learn/generative-ai-with-llms?utm_campaign=WebsiteCoursesGAIA&utm_medium=institutions&utm_source=deeplearning-ai)
+
+[2] [Introduction to Large Language Models by Kumar Chandrakant on www.baeldung.com](https://www.baeldung.com/cs/large-language-models)
+
+[3] [Large language model - Wikipedia](https://en.wikipedia.org/wiki/Large_language_model)
