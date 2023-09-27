@@ -759,7 +759,7 @@ There are also several different algorithms that you can use for this part of th
 
 ### **6.1. ROUGE (Recall-Oriented Understudy for Gissing Evaluation)**
 
-ROUGE is a set of metrics used for evaluating the quality of summaries. It compares the generated summary with one or more reference summaries and calculates precision, recall, and F1-score (Figure 4). ROUGE scores provide insights into the summary generation capabilities of the language model.
+ROUGE is a set of metrics used for evaluating the quality of summaries. It compares the generated summary with one or more reference summaries and calculates precision, recall, and F1-score. ROUGE scores provide insights into the summary generation capabilities of the language model.
 
 <p align="center">
   <img src="https://live.staticflickr.com/65535/53216054612_8e9fb4cbd1_o.png" >
@@ -768,6 +768,8 @@ ROUGE is a set of metrics used for evaluating the quality of summaries. It compa
   <br>
   <i>ROUGE examples</i>
 </p>
+
+ROUGE is ussually used for evalutating text summarization tasks because it can be used to compares the generated summary with one or more reference summaries.
 
 ### **6.2. BLEU (Bilingual Evaluation Understudy)**
 
@@ -778,6 +780,8 @@ BLEU is a metric commonly used in machine translation tasks. It compares the gen
   <br>
   <i>BLEU example</i>
 </p>
+
+BLEU is ussually used for evalutating text translation tasks because it can be used to compare the generated output with human-generated translations.
 
 ### **6.3. Perplexity**
 
