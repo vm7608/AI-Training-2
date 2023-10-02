@@ -1,6 +1,6 @@
 # **Generative Pre-trained Transformer (GPT)**
 
-## **1. Introduction*
+## **1. Introduction**
 
 Over the past years, everywhere around the internet — ChatGPT become more and more popular and it is in fact acknowledged that the next decade will be the decade of generative models. ChatGPT could be considered as one of the deep-generative model’s language processing applications. ChatGPT was primarily built upon an improved version of OpenAI’s GPT-3 model known as GPT-3.5. So, what mean by GPT?
 
@@ -12,12 +12,12 @@ GPT models are pre-trained on vast amounts of text data and can then be fine-tun
 
 The GPT model has seen multiple versions, each one more powerful and capable than the last. The first version of GPT was released in 2018, and the latest version, GPT-4, was released on 2023. The following table summarizes the main versions of GPT models:
 
-| **GPT Version**  | **Introduction Year** | **Number of Parameters** | **Paper** | **Training Data** | **Key Features** | **Achievements** |
-|--------|--------|--------|--------|--------|--------|--------|
-| GPT-1 | 2018 | 117 million | [Improving Language Understanding by Generative Pre-training](https://paperswithcode.com/paper/improving-language-understanding-by) | Large text corpus | Unsupervised pre-training | Coherent sentence and paragraph generation |
-| GPT-2 | 2019 | 1.5 billion | [Language Models are Unsupervised Multitask Learners](https://paperswithcode.com/paper/language-models-are-unsupervised-multitask) | Fiction books, web data | General-purpose learner | Human-like text generation, various tasks |
-| GPT-3 | 2020 | 175 billion | [Language Models are Few-Shot Learners](https://paperswithcode.com/paper/language-models-are-few-shot-learners) | Diverse data sources | Deep transformer model | Strong zero-shot and few-shot learning |
-| GPT-4 | 2023 | 1 trillion (not official) | [GPT-4 Technical Report](https://arxiv.org/abs/2303.08774) | Multimodal (image and text) | Large, fact-based model | Human-level performance on professional benchmarks, academic tasks, and ethical considerations |
+| **GPT Version**  | **Introduction Year** | **Number of Parameters** | **Paper** | **Achievements** |
+|-------------------|------------------------|--------------------------|----------|-------------------|
+| GPT-1 | 2018 | 117 million | [Improving Language Understanding by Generative Pre-training](https://paperswithcode.com/paper/improving-language-understanding-by) | Coherent sentence and paragraph generation |
+| GPT-2 | 2019 | 1.5 billion | [Language Models are Unsupervised Multitask Learners](https://paperswithcode.com/paper/language-models-are-unsupervised-multitask) | Human-like text generation, various tasks |
+| GPT-3 | 2020 | 175 billion | [Language Models are Few-Shot Learners](https://paperswithcode.com/paper/language-models-are-few-shot-learners) | Strong zero-shot and few-shot learning |
+| GPT-4 | 2023 | 1 trillion (not official) | [GPT-4 Technical Report](https://arxiv.org/abs/2303.08774) | Multimodal (Image and text); Human-level performance on professional benchmarks, academic tasks, and ethical considerations |
 
 GPT models have a wide range of applications in various fields. Here are some of the main applications of GPT models:
 
@@ -58,10 +58,21 @@ The following image is the detail illustration of the GPT-3 architecture with th
 - Vocabulary size: 50257
 
 <p align="center">
-  <img src="https://images.viblo.asia/2f2c0b9e-5b0a-4b0e-8b0a-9b0b0b0b0b0b.png" >
+  <img src="https://live.staticflickr.com/65535/53225424182_fd3cc521bd_b.jpg" >
   <br>
   <i>Detail illustration of the GPT-3 architecture</i>
 </p>
+
+The below table is the detail of implementation of each version of GPT model:
+
+| Model | Word Embedding Size | Number of Decoder Blocks | Number of Self-Attention Heads in the Decoder | Dimension of Self-Attention Head | Context Window Size | Vocabulary Size | Training Dataset | Number of Parameters |
+|-------|---------------------|-------------------------|--------------------------------------------|----------------------------------|---------------------------------------|----------------|-----------------|-----------|
+| GPT-1 | 768      | 12       | 12        | 64   | 512  | 40,000   | BookCorpus        | 117M   |
+| GPT-2 | 768      | 12-48    | 12-48     | 64   | 1024 | 50,257   | WebText           | 1.5B |
+| GPT-3 | 12888    | 96       | 96        | 128  | 2048 | 175B     | CommonCrawl, WebText, English Wikipedia, and two books corpora (Books1 and Books2) | 175B  |
+| GPT-4 | Unknown  | Unknown  | Unknown   | Unknown   | 32768   | Unknown        | Unknown         | In trillions (*)       |
+
+(*) Not official.
 
 ## **2. GPT-1**
 

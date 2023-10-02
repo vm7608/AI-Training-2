@@ -755,6 +755,191 @@ These series of steps together forms a single iteration of the RLHF process. The
 
 There are also several different algorithms that you can use for this part of the RLHF process. A popular choice is proximal policy optimization or PPO for short.
 
+<p align="center">
+  <img src="https://live.staticflickr.com/65535/53227858261_78c2ea0097_b.jpg" >
+  <br>
+  <i>PPO</i>
+</p>
+
+### **5.7. Proximal policy optimization (PPO)**
+
+Proximal policy optimization (PPO) is a powerful algorithm for solving reinforcement learning problems that is used to optimize the policy of an agent, in this case the LLM to be more aligned with human preferences. It our agent's training stability by avoiding too large policy update. The updates are small and within a bounded region, resulting in an updated LLM that is close to the previous version, hence the name Proximal Policy Optimization.
+
+Using PPO in aligning LLMs has 2 main phases.
+
+- Phase 1: Create completions, calculate rewards and value losses.
+- Phase 2: Update model with an objective function.
+
+<p align="center">
+  <img src="https://live.staticflickr.com/65535/53226984382_d393ec718d_b.jpg" >
+  <br>
+  <i>PPO phases</i>
+</p>
+
+#### **5.7.1. Phase 1**
+
+In Phase I, the LLM, is used to carry out a number of experiments, completing the given prompts. These experiments allow you to update the LLM against the reward model in Phase II. Remember that the reward model captures the human preferences. For example, the reward can define how helpful, harmless, and honest the responses are. The expected reward of a completion is an important quantity used in the PPO objective. We estimate this quantity through a separate head of the LLM called the value function.
+
+Assume a number of prompts are given. First, LLMs generate responses to the prompts, then we calculate the reward for the prompt completions using the reward model. Then, the value function estimates the expected total reward for a given state s. In other words, as the LLM generates each token of a completion, you want to estimate the total future reward based on the current sequence of tokens.
+
+<p align="center">
+  <img src="https://live.staticflickr.com/65535/53228235899_d316212798_b.jpg" >
+  <img src="https://live.staticflickr.com/65535/53228166348_0c3f501c15_o.png" >
+  <br>
+  <i>Create completions and calculate rewards</i>
+</p>
+
+The goal is to minimize the value loss that is the difference between the actual future total reward and its approximation to the value function. The value loss makes estimates for future rewards more accurate. The value function is then used in Advantage Estimation in Phase 2.
+
+<p align="center">
+  <img src="https://live.staticflickr.com/65535/53228166353_734e5ccc2b_b.jpg" >
+  <br>
+  <i>Calculate value loss</i>
+</p>
+
+#### **5.7.2. Phase 2**
+
+In Phase 2, you make a small updates to the model and evaluate the impact of those updates on your alignment goal for the model. The model weights updates are guided by the prompt completion, losses, and rewards. PPO also ensures to keep the model updates within a certain small region called the `trust region`. Ideally, this series of small updates will move the model towards higher rewards.
+
+##### **The intuition behind PPO**
+
+The idea with Proximal Policy Optimization (PPO) is that we want to improve the training stability of the policy by limiting the change you make to the policy at each training epoch: we want to avoid having too large policy updates for two reasons:
+
+- We know empirically that smaller policy updates during training are more likely to converge to an optimal solution.
+- A too big step in a policy update can result in getting a bad policy and having a long time or even no possibility to recover.
+
+<p align="center">
+  <img src="https://huggingface.co/blog/assets/93_deep_rl_ppo/cliff.jpg" >
+  <br>
+  <i>Taking smaller policy updates improve the training stability</i>
+</p>
+
+So with PPO, we update the policy conservatively. To do so, we need to measure how much the current policy changed compared to the former one using a ratio calculation between the current and former policy. And we clip this ratio in a range $`[1-\epsilon, 1+\epsilon]`$ where $`\epsilon`$ is a hyperparameter. That mean we remove the incentive for the current policy to go too far from the old one.
+
+##### **The Policy Objective Function in RL**
+
+<p align="center">
+  <img src="https://huggingface.co/blog/assets/93_deep_rl_ppo/lpg.jpg" >
+  <br>
+  <i>The Policy Objective Function</i>
+</p>
+
+The idea of the policy objective function in RL was that by taking a gradient ascent step on this function (equivalent to taking gradient descent of the negative of this function), we would push our agent to take actions that lead to higher rewards and avoid harmful actions. However, the problem comes from the step size:
+
+- Too small, the training process was too slow
+- Too high, there was too much variability in the training
+
+Here with PPO, the idea is to constrain our policy update with a new objective function called the Clipped surrogate objective function that will constrain the policy change in a small range using a clip. This new function is designed to avoid destructive large weights updates :
+
+<p align="center">
+  <img src="https://huggingface.co/blog/assets/93_deep_rl_ppo/ppo-surrogate.jpg" >
+  <br>
+  <i>PPO's Clipped surrogate objective function</i>
+</p>
+
+##### **The Ratio Function**
+
+<p align="center">
+  <img src="https://huggingface.co/blog/assets/93_deep_rl_ppo/ratio1.jpg" >
+  <img src="https://huggingface.co/blog/assets/93_deep_rl_ppo/ratio2.jpg" >
+  <br>
+  <i>The Ratio Function</i>
+</p>
+
+It’s the probability of taking action $`a_t`$ at state $`s_t`$​ in the current policy divided by the previous one. As we can see, $`r_{t}(\theta)`$ denotes the probability ratio between the current and old policy:
+
+- If $`r_{t}(\theta) > 1`$, the action $`a_t`$ at state $`s_t`$​ is more likely to be taken in the current policy than in the previous one.
+- If $`0 < r_{t}(\theta) < 1`$, the action $`a_t`$ at state $`s_t`$​ is less likely to be taken in the current policy than in the old one.
+
+So this probability ratio is an easy way to estimate the divergence between old and current policy.
+
+##### **The unclipped part of the Clipped Surrogate Objective function**
+
+<p align="center">
+  <img src="https://huggingface.co/blog/assets/93_deep_rl_ppo/unclipped1.jpg" >
+  <br>
+  <i>The unclipped part</i>
+</p>
+
+This ratio can replace the log probability we use in the policy objective function. This gives us the left part of the new objective function: multiplying the ratio by the advantage. However, without a constraint, if the action taken is much more probable in our current policy than in our former, this would lead to a significant policy gradient step and, therefore, an excessive policy update.
+
+##### **The clipped Part of the Clipped Surrogate Objective function**
+
+<p align="center">
+  <img src="https://huggingface.co/blog/assets/93_deep_rl_ppo/clipped.jpg" >
+  <br>
+  <i>The clipped part</i>
+</p>
+
+Consequently, we need to constrain this objective function by penalizing changes that lead to a ratio away from 1 (in the paper, the ratio can only vary from 0.8 to 1.2). By clipping the ratio, we ensure that we do not have a too large policy update because the current policy can't be too different from the older one.
+
+To do that, we have two solutions:
+
+- TRPO (Trust Region Policy Optimization) uses KL divergence constraints outside the objective function to constrain the policy update. But this method is complicated to implement and takes more computation time.
+- PPO clip probability ratio directly in the objective function with its Clipped surrogate objective function.
+
+This clipped part is a version where $`r_{t}(\theta)`$ is clipped between $`[1-\epsilon, 1+\epsilon]`$.
+
+With the Clipped Surrogate Objective function, we have two probability ratios, one non-clipped and one clipped in a range. Epsilon is a hyperparameter that helps us to define this clip range and is set to 0.2 in the paper.
+
+Then, we take the minimum of the clipped and non-clipped objective, so the final objective is a lower bound (pessimistic bound) of the unclipped objective. Taking the minimum of the clipped and non-clipped objective means we'll select either the clipped or the non-clipped objective based on the ratio and advantage situation.
+
+##### **Visualize the Clipped Surrogate Objective function**
+
+<p align="center">
+  <img src="https://huggingface.co/blog/assets/93_deep_rl_ppo/recap.jpg" >
+  <br>
+  <i>6 different situations of the Clipped Surrogate Objective function</i>
+</p>
+
+`Case 1 and 2:` the ratio is between the range $`[1-\epsilon, 1+\epsilon]`$ so he clipping does not apply.
+
+- In situation 1, we have a positive advantage: the action is better than the average of all the actions in that state. Therefore, we should encourage our current policy to increase the probability of taking that action in that state. Since the ratio is between intervals, we can increase our policy's probability of taking that action at that state.
+
+- In situation 2, we have a negative advantage: the action is worse than the average of all actions at that state. Therefore, we should discourage our current policy from taking that action in that state. Since the ratio is between intervals, we can decrease the probability that our policy takes that action at that state.
+
+`Case 3 and 4:` the ratio is below the range.
+
+- If the probability ratio is lower than $`[1-\epsilon]`$, the probability of taking that action at that state is much lower than with the old policy.
+- If, like in situation 3, the advantage estimate is positive (A>0), then you want to increase the probability of taking that action at that state.
+- But if, like situation 4, the advantage estimate is negative, we don't want to decrease further the probability of taking that action at that state. Therefore, the gradient is = 0 (since we're on a flat line), so we don't update our weights.
+
+`Case 5 and 6:` the ratio is above the range.
+
+- If the probability ratio is higher than $`[1+\epsilon]`$, the probability of taking that action at that state in the current policy is much higher than in the former policy.
+- If, like in situation 5, the advantage is positive, we don't want to get too greedy. We already have a higher probability of taking that action at that state than the former policy. Therefore, the gradient is = 0 (since we're on a flat line), so we don't update our weights.
+- If, like in situation 6, the advantage is negative, we want to decrease the probability of taking that action at that state.
+
+`So to sum up,` we update the policy with the unclipped objective part only if:
+
+- Our ratio is in the range $`[1-\epsilon, 1+\epsilon]`$.
+- Our ratio is outside the range, but the advantage leads to getting closer to the range.
+  - Being below the ratio but the advantage is > 0
+  - Being above the ratio but the advantage is < 0
+
+When the minimum is the clipped objective part, we don't update our policy weights since the gradient will equal 0 (the derivative of both $`(1-\epsilon)*A`$ and $`(1+\epsilon)*A`$ is 0).
+
+##### **Calculate the entropy loss**
+
+Are there any additional components? Yes. You also have the entropy loss. While the policy loss moves the model towards alignment goal, entropy allows the model to maintain creativity. If you kept entropy low, you might end up always completing the prompt in the same way as shown here. Higher entropy guides the LLM towards more creativity. This is similar to the temperature setting of LLM that you've seen in Week 1. The difference is that the temperature influences model creativity at the inference time, while the entropy influences the model creativity during training.
+
+<p align="center">
+  <img src="https://live.staticflickr.com/65535/53226984407_bf878c1b49_b.jpg" >
+  <br>
+  <i>Entropy loss</i>
+</p>
+
+##### **The final objective function of PPO**
+
+The final Clipped Surrogate Objective Loss for PPO looks like this, it's a combination of Clipped Surrogate Objective function, Value Loss Function and Entropy bonus. The C1 and C2 coefficients are hyperparameters.
+<p align="center">
+  <img src="https://live.staticflickr.com/65535/53228166383_7a1dab6d16_b.jpg" >
+  <br>
+  <i>The final objective function</i>
+</p>
+
+The PPO objective updates the model weights through back propagation over several steps which updates the model towards human preference in a stable manner. Once the model weights are updated, PPO starts a new cycle. After many iterations, you arrive at the human-aligned LLM.
+
 ## **6. Evaluating LLMs**
 
 ### **6.1. ROUGE (Recall-Oriented Understudy for Gissing Evaluation)**
