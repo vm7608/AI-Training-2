@@ -942,9 +942,189 @@ The PPO objective updates the model weights through back propagation over severa
 
 ## **6. Evaluating LLMs**
 
-### **6.1. ROUGE (Recall-Oriented Understudy for Gissing Evaluation)**
+### **6.1. BLEU (Bilingual Evaluation Understudy)**
 
-ROUGE is a set of metrics used for evaluating the quality of summaries. It compares the generated summary with one or more reference summaries and calculates precision, recall, and F1-score. ROUGE scores provide insights into the summary generation capabilities of the language model.
+BLEU (BiLingual Evaluation Understudy) is a metric for automatically evaluating machine-translated text. The BLEU score is a number between zero and one that measures the similarity of the machine-translated text to a set of high quality reference translations. A value of 0 means that the machine-translated output has no overlap with the reference translation (low quality) while a value of 1 means there is perfect overlap with the reference translations (high quality). The following table shows the interpretation of BLEU scores:
+
+| BLEU Score  | Interpretation                                            |
+|-------------|-----------------------------------------------------------|
+| < 0.1       | Almost useless                                            |
+| 0.1 - 0.19  | Hard to get the gist                                      |
+| 0.2 - 0.29  | The gist is clear, but has significant grammatical errors |
+| 0.3 - 0.4   | Understandable to good translations                       |
+| 0.4 - 0.5   | High quality translations                                 |
+| 0.5 - 0.6   | Very high quality, adequate, and fluent translations      |
+| > 0.6       | Quality often better than human                           |
+
+#### **Precision**
+
+Precision measures the number of words in the Predicted Sentence that also occur in the Target Sentence. We would normally compute the Precision using the formula:
+
+```math
+Precision = \frac{\text{Number of words in Predicted Sentence that also occur in Target Sentence}}{\text{Number of words in Predicted Sentence}}
+```
+
+Let’s say, that we have:
+
+- Target Sentence: He eats an apple
+- Predicted Sentence: He ate an apple
+
+So the precision for the above exmample is 3/4.
+
+But using Precision like this is not good enough. There are two cases that we still need to handle.
+
+- The first issue is that this formula allows us to cheat. We could predict a sentence:
+  - Target Sentence: He eats an apple
+  - Predicted Sentence: He He He
+  - The above get perfect precison = 3/3 = 1
+- Secondly, as we’ve already discussed, there are many correct ways to express the same sentence. In many NLP models, we might be given multiple acceptable target sentences that capture these different variations. So we need to modify the formula to handle these two cases. We account for these two scenarios using a modified Precision formula which we’ll call `“Clipped Precision”`.
+
+Let’s say, that we have the following sentences:
+
+Target Sentence 1: He eats a sweet apple
+Target Sentence 2: He is eating a tasty apple
+Predicted Sentence: He He He eats tasty fruit
+We now do two things differently:
+
+We compare each word from the predicted sentence with all of the target sentences. If the word matches any target sentence, it is considered to be correct.
+We limit the count for each correct word to the maximum number of times that that word occurs in the Target Sentence. This helps to avoid the Repetition problem. This will become clearer below.
+
+<p align="center">
+  <img src="https://miro.medium.com/v2/resize:fit:720/format:webp/0*ccCNFbdGeGzZr-SM.png" >
+  <br>
+  <i>Clip precision example</i>
+</p>
+
+For instance, the word “He” occurs only once in each Target Sentence. Therefore, even though “He” occurs thrice in the Predicted Sentence, we ‘clip’ the count to one, as that is the maximum count in any Target Sentence.
+
+```math
+Clipped Precision = \frac{\text{Clipped number of correct predicted words}}{\text{ Number of total predicted words}}
+```
+
+So the clipped precision for the above example is 3/6.
+
+#### **Calculate BLEU score**
+
+Let’s say we have an NLP model that produces a predicted sentence as below. For simplicity, we will take just one Target Sentence, but as in the example above, the procedure for multiple Target Sentences is very similar.
+
+- Target Sentence: The guard arrived late because it was raining
+- Predicted Sentence: The guard arrived late because of the rain
+
+The first step is to compute Precision scores for 1-grams through 4-grams. We use the Clipped Precision method that we just discussed.
+
+```math
+\text{Precision 1-gram} = \frac{\text{Number of correct predicted 1-grams}}{\text{Number of total predicted 1-grams}}
+```
+
+<p align="center">
+  <img src="https://miro.medium.com/v2/resize:fit:640/format:webp/0*uInR1otrb3d3pKtV.png" >
+  <br>
+  <i>Precision 1-gram (p1) = 5 / 8</i>
+</p>
+
+```math
+\text{Precision 2-gram} = \frac{\text{Number of correct predicted 2-grams}}{\text{Number of total predicted 2-grams}}
+```
+
+<p align="center">
+  <img src="https://miro.medium.com/v2/resize:fit:640/format:webp/0*cIGCQAAdahIx_Snv.png" >
+  <br>
+  <i>Precision 2-gram (p2) = 4 / 7</i>
+</p>
+
+<p align="center">
+  <img src="https://miro.medium.com/v2/resize:fit:640/format:webp/0*fQEPPBKQuQ0OrLNJ.png" >
+  <img src="https://miro.medium.com/v2/resize:fit:640/format:webp/0*JyUBZ5o2h1Z2PwXe.png" >
+  <br>
+  <i>Similarly, Precision 3-gram (p₃) = 3 / 6 and Precision 4-gram (p₄) = 2 / 5</i>
+</p>
+
+Next, we combine these Precision Scores using the formula below. This can be computed for different values of N and using different weight values. Typically, we use N = 4 and uniform weights $`w_n = N / 4`$
+
+<p align="center">
+  <img src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*0Zi8SI4CkOMd7avkk9BTTA.png" >
+  <br>
+  <i>Precision Scores</i>
+</p>
+
+The third step is to compute a `‘Brevity Penalty’`. If you notice how Precision is calculated, we could have output a predicted sentence consisting of a single word like “The’ or “late”. For this, the 1-gram Precision would have been 1/1 = 1, indicating a perfect score. This is obviously misleading because it encourages the model to output fewer words and get a high score. To offset this, the Brevity Penalty penalizes sentences that are too short.
+
+<p align="center">
+  <img src="https://miro.medium.com/v2/resize:fit:640/format:webp/0*AoJZFTk0AXqHZrM9.png" >
+  <br>
+  <i>Brevity Penalty</i>
+</p>
+
+Where c is predicted length = number of words in the predicted sentence and r is target length = number of words in the target sentence. This ensures that the Brevity Penalty cannot be larger than 1, even if the predicted sentence is much longer than the target. And, if you predict very few words, this value will be small. In this example, c = 8 and r = 8, which means Brevity Penalty = 1.
+
+Finally, to calculate the Bleu Score, we multiply the Brevity Penalty with the Geometric Average of the Precision Scores.
+
+<p align="center">
+  <img src="https://miro.medium.com/v2/resize:fit:640/format:webp/1*gGgQvDgayGCfTkI5MFGMjg.png" >
+  <br>
+  <i>Bleu Score</i>
+</p>
+
+Bleu Score can be computed for different values of N. Typically, we use N = 4.
+
+- BLEU-1 uses the unigram Precision score
+- BLEU-2 uses the geometric average of unigram and bigram precision
+- BLEU-3 uses the geometric average of unigram, bigram, and trigram precision and so on.
+
+#### **Strengths of Bleu Score**
+
+The reason that Bleu Score is so popular is that it has several strengths:
+
+- It is quick to calculate and easy to understand.
+- It corresponds with the way a human would evaluate the same text.
+- Importantly, it is language-independent making it straightforward to apply to your NLP models.
+- It can be used when you have more than one ground truth sentence.
+- It is used very widely, which makes it easier to compare your results with other work.
+
+#### **Weaknesses of Bleu Score**
+
+In spite of its popularity, Bleu Score has been criticized for its weaknesses:
+
+- It does not consider the meaning of words. It is perfectly acceptable to a human to use a different word with the same meaning eg. Use “watchman” instead of “guard”. But Bleu Score considers that an incorrect word.
+- It looks only for exact word matches. Sometimes a variant of the same word can be used eg. “rain” and “raining”, but Bleu Score counts that as an error.
+- It ignores the importance of words. With Bleu Score an incorrect word like “to” or “an” that is less relevant to the sentence is penalized just as heavily as a word that contributes significantly to the meaning of the sentence.
+- It does not consider the order of words eg. The sentence “The guard arrived late because of the rain” and “The rain arrived late because of the guard” would get the same (unigram) Bleu Score even though the latter is quite different.
+
+### **6.2. ROUGE (Recall-Oriented Understudy for Gissing Evaluation)**
+
+ROUGE is a set of metrics used for evaluating the quality of summaries. Unlike BLEU, the ROUGE uses both recall and precision to compare model generated summaries known as candidates against a set of human generated summaries known as references.
+
+ROUGE compares the generated summary with one or more reference summaries and calculates precision, recall, and F1-score. ROUGE scores provide insights into the summary generation capabilities of the language model.
+
+Hence, the recall, precision and F1 can be obtained as shown below:
+
+```math
+\text{Recall} = \frac{\text{Number of mathcing n-grams between candidate and reference summaries}}{\text{Number of n-grams in reference summary}}
+```
+
+```math
+\text{Precision} = \frac{\text{Number of mathcing n-grams between candidate and reference summaries}}{\text{Number of n-grams in candidate summary}}
+```
+
+```math
+F1 = \frac{2*Recall*Precision}{Recall + Precision}
+```
+
+Beside that, we have ROUGE-L, which is defined as the longest common subsequence (LCS) between the candidate and reference summaries. The LCS is the longest sequence of words that are common between the candidate and reference summaries. The ROUGE-L score is calculated as follows:
+
+```math
+\text{ROUGE-L Recall} = \frac{\text{LCS(candidate, reference)}}{\text{Number of words in reference summary}}
+```
+
+```math
+\text{ROUGE-L Recall} = \frac{\text{LCS(candidate, reference)}}{\text{Number of words in candicate summary}}
+```
+
+```math
+\text{ROUGE-L F1} = \frac{(1 + \beta^2)*Recall*Precision}{Recall + \beta^2*Precision}
+```
+
+Here, $`\beta`$ is used to balance the importance of recall and precision.
 
 <p align="center">
   <img src="https://live.staticflickr.com/65535/53216054612_8e9fb4cbd1_o.png" >
@@ -956,35 +1136,50 @@ ROUGE is a set of metrics used for evaluating the quality of summaries. It compa
 
 ROUGE is ussually used for evalutating text summarization tasks because it can be used to compares the generated summary with one or more reference summaries.
 
-### **6.2. BLEU (Bilingual Evaluation Understudy)**
+ROUGE has the following advantages:
 
-BLEU is a metric commonly used in machine translation tasks. It compares the generated output with one or more reference translations and measures the similarity between them. BLEU scores range from 0 to 1, with higher scores indicating better performance.
+- Easy to calculate and understand and is usually used to evaluate text summarization systems.
+- ROUGE and its variants have worked well for summarization of single documents and short texts.
 
-<p align="center">
-  <img src="https://live.staticflickr.com/65535/53217317484_624f7f62f5_o.png" >
-  <br>
-  <i>BLEU example</i>
-</p>
+Disadvantages:
 
-BLEU is ussually used for evalutating text translation tasks because it can be used to compare the generated output with human-generated translations.
+- ROUGE has the same problem as BLEU regarding the synonyms. The meaning of the n-grams is not considered and hence “fast” and “quick” will not be considered as similar.
+- The score is heavily dependent on the word choice and structure of the references chosen for evaluation.
 
 ### **6.3. Perplexity**
 
-The most commonly used measure of a language model's performance is its perplexity on a given text corpus. Perplexity is a measure of how well a model is able to predict the contents of a dataset; the higher the likelihood the model assigns to the dataset, the lower the perplexity. Mathematically, perplexity is defined as the exponential of the average negative log likelihood per token:
+Perplexity is a measurement that reflects `how well a model can predict the next word based on the preceding context`. The higher the likelihood the model assigns to the dataset, the lower the perplexity. `The lower the perplexity score, the better the model’s ability to predict the next word accurately.`
+
+Mathematically, perplexity is defined as the exponential of the average negative log likelihood per token:
 
 ```math
-log(Permplexity) = -\frac{1}{N}\sum_{i=1}^{N}log(P(token_i|context for token_i)) = -\frac{1}{N}\sum_{i=1}^{N}log(P(token_i|token_1, token_2, ..., token_{i-1}))
+log(Permplexity) = -\frac{1}{N}\sum_{i=1}^{N}log(P(t_i|t_1, t_2, ..., t_{i-1}))
 ```
 
-here N is the number of tokens in the text corpus, and "context for token i" depends on the specific type of LLM used. If the LLM is autoregressive, then "context for token i" is the segment of text appearing before token i. If the LLM is masked, then "context for token i" is the segment of text surrounding token i.
+Where:
 
-Because language models may overfit to their training data, models are usually evaluated by their perplexity on a test set of unseen data. This presents particular challenges for the evaluation of large language models. As they are trained on increasingly large corpora of text largely scraped from the web, it becomes increasingly likely that models' training data inadvertently includes portions of any given test set.
+- N is the number of tokens in the text corpus.
+- $`log(P(t_i|t_1, t_2, ..., t_{i-1}))`$ is the predicted probability of the i-th word given the preceding words $`t_1, t_2, ..., t_{i-1}`$.
 
 <p align="center">
   <img src="https://images.surferseo.art/42b4e02c-2bfb-4955-bd5a-f55bf90465fb.png" >
   <br>
   <i>Perplexity example</i>
 </p>
+
+Perplexity plays a crucial role in determining the success of LLMs and generative AI models for several reasons like enhance user experience, evaluation of model performance, etc. But it has some main limitations:
+
+- Model Vocabulary Could Unfairly Influence Perplexity: Perplexity heavily relies on the model’s vocabulary and its ability to generalize unseen words. If a model comes across words or phrases that are not present in its training data, it may assign high perplexity scores even when the generated text makes sense.
+
+- Lack of Subjectivity Consideration: Perplexity does not account for subjective factors such as style, creativity, or appropriateness in specific contexts. A model with a low perplexity may generate text that is technically accurate but lacks the desired tone, voice, or level of creativity required for certain applications.
+
+- Contextual Understanding: Perplexity primarily focuses on the prediction of the next word based on the preceding context. However, it may not capture the model’s overall understanding of the broader context. For example, a model may assign a low perplexity score to a sentence that is technically correct but does not make sense in the given context.
+
+- Language Ambiguity and Creativity: Perplexity does not capture the model’s ability to handle language ambiguity or generate creative and novel outputs.
+
+- Overfitting and Generalization: Perplexity can be affected by overfitting, where a model performs exceptionally well on the training data but struggles with generalizing to unseen or real-world examples. Models that achieve low perplexity scores on a specific dataset may not perform as well on diverse inputs or in practical scenarios.
+
+- ...
 
 ### **6.4. Human evaluation**
 
@@ -1005,7 +1200,9 @@ This approach offers subjective feedback on the model’s performance. However, 
 
 ### **6.5. Benchmarking**
 
-Beside the above evaluation methods, benchmarking is also a popular method for evaluating LLMs. Benchmarking is the process of comparing the performance of a model against a set of standard tasks or datasets. Benchmarking provides a standardized way to compare the performance of different models. It also helps to identify the strengths and weaknesses of a model and to understand how it performs on different tasks. However, benchmarking has some limitations. For example, it can be difficult to design a benchmark that captures the full range of a model’s capabilities. Additionally, benchmarking may not be able to capture the nuances of a model’s performance on a specific task. Therefore, it is important to use benchmarking in conjunction with other evaluation methods.
+Beside the above evaluation methods, benchmarking is also a popular method for evaluating LLMs. Benchmarking is the process of comparing the performance of a model against a set of standard tasks or datasets. Benchmarking provides a standardized way to compare the performance of different models. It also helps to identify the strengths and weaknesses of a model and to understand how it performs on different tasks.
+
+However, benchmarking has some limitations. For example, it can be difficult to design a benchmark that captures the full range of a model’s capabilities. Additionally, benchmarking may not be able to capture the nuances of a model’s performance on a specific task. Therefore, it is important to use benchmarking in conjunction with other evaluation methods.
 
 | Framework Name | Factors Considered for Evaluation | Url Link|
 | --- | --- | --- |

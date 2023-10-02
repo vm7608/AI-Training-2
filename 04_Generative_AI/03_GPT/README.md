@@ -243,6 +243,26 @@ The architecture of GPT-3 is same as GPT-2. Few major differences from GPT-2 are
 - Adam optimiser was used with β_1 = 0.9, β_2 = 0.95 and ε = 10^(-8).
 - Alternating dense and locally banded sparse attention patterns were used.
 
+### **4.4. Reinforcement Learning from Human Feedback**
+
+GPT-3 was aligned to human references using RLHF, this process consists of 3 distinct steps:
+
+1. `Supervised fine-tuning` – A pre-trained language model is fine-tuned on a relatively small amount of demonstration data curated by labelers, to learn a supervised policy that generates outputs from a selected list of prompts. This represents the baseline model.
+
+2. `“Mimic human preferences”` – Labelers are asked to vote on a relatively large number of the fine-tuned model outputs, this way creating a new dataset consisting of comparison data. A new model is trained on this dataset. This is referred to as the reward model (RM).
+
+3. `Proximal Policy Optimization (PPO)` – The reward model is used to align and improve the fine-tuned model. The outcome of this step is the so-called policy model.
+
+Step 1 takes place only once, while steps 2 and 3 can be iterated continuously: more comparison data is collected on the current best policy model, which is used to train a new reward model and then a new policy.
+
+The following image illustrates the above process:
+
+<p align="center">
+  <img src="https://images.openai.com/blob/cf717bdb-0c8c-428a-b82b-3c3add87a600/ChatGPT_Diagram.svg?width=10&height=10&quality=50" >
+  <br>
+  <i>Align GPT-3 with RLHF</i>
+</p>
+
 ## **5. GPT-4**
 
 ### **5.1. Abstract and Introduction**
@@ -338,6 +358,4 @@ There are some limitations that OpenAI has identified in GPT-4, including:
 - Caution should be exercised when using the output of GPT-4, especially in contexts where reliability is important.
 - GPT-4's capabilities and limitations create new and significant safety challenges that require careful study and mitigation.
 
-## **6. Hands-on Implementation using OpenAI API**
-
-## **7. References**
+## **6. References**
