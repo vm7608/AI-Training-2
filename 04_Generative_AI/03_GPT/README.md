@@ -358,4 +358,16 @@ There are some limitations that OpenAI has identified in GPT-4, including:
 - Caution should be exercised when using the output of GPT-4, especially in contexts where reliability is important.
 - GPT-4's capabilities and limitations create new and significant safety challenges that require careful study and mitigation.
 
-## **6. References**
+## **6. OpenAI API**
+
+OpenAI has released an API that allows users to access, fine-tune, and deploy GPT-3 models. They also provide some endpoints API for audio, chat, completions, embedding, etc. All the stuff is available at [OpenAI API](https://platform.openai.com/docs/api-reference).
+
+## **7. References**
+
+[1] [The Journey of Open AI GPT models](https://medium.com/walmartglobaltech/the-journey-of-open-ai-gpt-models-32d95b7b7fb2)
+
+[2] [The GPT-3 Architecture, on a Napkin](https://dugas.ch/artificial_curiosity/GPT_architecture.html)
+
+[3] [The Illustrated GPT-2 (Visualizing Transformer Language Models)](http://jalammar.github.io/illustrated-gpt2/)
+
+[4] [How GPT3 Works - Visualizations and Animations](http://jalammar.github.io/how-gpt3-works-visualizations-animations/)
