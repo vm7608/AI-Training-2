@@ -53,30 +53,35 @@ There are two types of reinforcement learning methods: positive and negative.
 
 | Characteristic | Positive Reinforcement | Negative Reinforcement|
 |-|-|-|
-|Definition| Strengthening behavior by adding a desirable stimulus or event after the behavior|Strengthening behavior by removing an undesirable stimulus or event after the behavior|
-|Effect on behavior|Increases behavior frequency|Increases behavior frequency|  
-|Mechanism|Behavior is reinforced by a reward being given|Behavior is reinforced by an aversive stimulus being removed|
-|Common in RL|Frequently used to encourage desired agent behaviors|Less common but can discourage unwanted agent behaviors|
-|Prefers approach|Approach desired stimuli/outcomes|Avoid unpleasant stimuli/outcomes|
-|Example| Giving a dog a treat when it sits (adding a reward)|Taking away an electric shock when a rat presses a lever (removing punishment)|
+|Definition| Positive reinforcement involves rewarding the agent for taking specific actions or making certain decisions. When the agent performs a desirable action, it receives a positive reward, which encourages it to repeat the behavior in the future.|Negative reinforcement involves punishing the agent for undesirable actions or decisions. When the agent makes a suboptimal choice or takes a wrong action, it receives a negative reward, which discourages it from repeating that behavior.|
+|Effect on behavior|Encourages the agent to repeat desired actions|Discourages the agent from repeating undesirable actions|
+|Example| Teaching a dog to sit. We give the dog a positive reward when it sits which encourages it to continue sitting in the future|Think of a self-driving car as an agent. If the car takes a wrong turn or commits a traffic violation, it might receive a negative reward. This negative reward discourages the car from making such mistakes in the future.|
 
 ## **5. Terms used in Reinforcement Learning**
 
-- **Agent**: An entity that can aware/explore the environment and take actions in it.
+- **Agent**: an entity that can be aware of and explore the maze environment, making decisions and taking actions to navigate through the maze.
+  - Example: In a maze game, the player controlling the character that moves through the maze is the agent.
 
-- **Environment (E)**: A scenario that an agent is present or surrounded by. In RL, we assume the environment is stochastic, which means it is random in nature.
+- **Environment (E)**: The maze itself, where the agent (player) is located and has to find a way out. In RL, the environment is stochastic, meaning the layout of the maze and any obstacles might change or have randomness.
+  - Example: The maze with its walls, pathways, and exit represents the environment in the maze game.
 
-- **Action (A)**: the set of all possible moves that an agent can take in a given situation within the environment.
+- **Action (A)**: The set of all possible moves that the agent can make within the maze to navigate from its current position to another location in the maze.
+  - Example: In a maze game, the actions include moving up, down, left, and right to traverse the maze, or in some cases, taking no action (standing still).
 
-- **State (S)** is a situation returned by the environment after each action taken by the agent.
+- **State (S)**: A situation returned by the environment after each action taken by the agent, representing the agent's current position in the maze.
+  - Example: In a maze game, the state could be the specific coordinates (row and column) of the character within the maze, which indicates the character's current location.
 
-- **Reward (R)**: A feedback returned to the agent from the environment to evaluate the action of the agent.
+- **Reward (R)**: Feedback returned to the agent (player) from the environment (maze) to evaluate the action taken by the player. It indicates how desirable or advantageous the player's actions are.
+  - Example: In the maze game, the player might receive a positive reward for reaching the exit and successfully completing the maze, while receiving a negative reward for hitting a wall or making inefficient moves.
 
-- **Policy (π)**: It is a strategy which applies by the agent to decide the next action based on the current state.
+- **Policy (π)**: A strategy applied by the agent (player) to decide the next action based on the current state (position in the maze). It's a set of rules or heuristics used to determine the best move.
+  - Example: In the maze game, the player's policy might be to always choose the direction that brings them closer to the exit, avoiding walls and dead ends.
 
-- **Value (V)**:  opposed to the short-term reward R. It is the expected sum of all future rewards.
+- **Value (V)**: The expected sum of all future rewards that the agent can achieve from a particular state while following a specific policy. It represents the long-term desirability of a state in terms of the cumulative rewards. Used to evaluate states and helps the agent make decisions about which states to prioritize or avoid based on their long-term desirability.
+  - Example: In the maze game, the value of a specific location within the maze represents how good or bad it is to be at that location, considering the expected future rewards, such as reaching the exit with fewer moves.
 
-- **Q value or action value (Q)**: It is mostly similar to the value, but it describes the value of taking an action a in state s under a policy π.
+- **Q value or action value (Q)**: It is mostly similar to the value, but it describes the value of taking an action a in state s under a policy π and then following a specific policy 'π' for the rest of the interaction with the environment. In other words, it quantifies how good it is to take a particular action in a given state under a given policy (which action to take in each state to maximize its long-term reward).
+  - Example: the Q value for a particular state-action pair represents the expected cumulative reward if the agent (player) chooses a specific action in a specific state and follows its policy. For instance, if the agent is in a state 'S' (position) and the available actions are 'move left,' 'move right,' 'move up,' and 'move down,' the Q values would be computed for each of these actions in that state. The Q values help the agent make informed decisions about which action to take in each state to maximize its long-term reward.
 
 <p align="center">
   <img src="https://www.guru99.com/images/1/082319_0514_Reinforceme1.png" >
