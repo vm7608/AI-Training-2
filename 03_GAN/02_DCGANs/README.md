@@ -111,7 +111,7 @@ Within the discriminator, they also found that The LeakyReLU activation function
 well, especially for higher resolution modeling. So LeakyReLU is used in the discriminator for all layers.
 
 <p align="center">
-  <img src="https://www.researchgate.net/profile/Junxi-Feng/publication/335845675/figure/fig3/AS:804124836765699@1568729709680/Commonly-used-activation-functions-a-Sigmoid-b-Tanh-c-ReLU-and-d-LReLU.ppm" >
+  <img src="https://live.staticflickr.com/65535/53233519811_d71ea0f69b_o.png" >
   <br>
   <i>Some common activation functions</i>
 </p>
