@@ -276,11 +276,39 @@ There are two types of reinforcement learning methods: positive and negative.
 
 - MDP is used to describe the environment for the RL, and almost all the RL problem can be formalized using MDP.
 
-- MDP contains a tuple of four elements (S, A, Pa, Ra):
-  - A set of finite states (S)
-  - A set of finite actions (A)
-  - A set of rewards (Ra) received after transitioning from state s to s' with action a
-  - A transition probability matrix (Pa) which is the probability of transitioning from state s to s' with action a
+- MDP contains a tuple of 5 elements $`(S, A, P, R, \gamma)`$ where:
+
+  - S is a set of states (typpically finite)
+  - A is a set of actions (typpically finite)s
+  - P is a transition probability matrix. In which $`P(s, s', a) = P(s_{t+1} = s' | s_t = s, a_t = a)`$ is the probability of transitioning from state s to s' with action a
+  - $`R(s, s', a) \in \mathbb{R}`$ is the immediate reward after going from state s to s' with action a.
+  - $`\gamma`$ is the discount factor, which determines how much the agent cares about rewards in the long-term future or in the short–term future. It has a value between 0 and 1. Lower value encourages short–term rewards while higher value promises long-term reward.
+
+Now, we have $`G_t`$ is the total discounted reward from time-step t, opposite to the total reward $`R_t`$ which is an immediate return.
+
+```math
+G_t=\sum_{k=0}^{\infty}\gamma^kR_{t+k+1}
+```
+
+$`V^\pi(s)`$ is the "state" value function of an MDP (Markov Decision Process). It's the expected return starting from state s, and then following policy π.
+
+```math
+V^\pi(s) = E_{\pi} \{G_t \vert s_t = s\}
+```
+
+$`Q^\pi(s, a)`$ is the "state action" value function, also known as the quality function. It is the expected return starting from state s, taking action a, and then following policy π.  It's focusing on the particular action at the particular state.
+
+```math
+Q^\pi(s, a) = E_\pi \{G_t | s_t = s, a_t = a\}
+```
+
+The relationship between $`V^\pi(s)`$ and $`Q^\pi(s, a)`$ is:
+
+```math
+V^\pi(s) = \sum_{a ∈ A} \pi (a|s) * Q^\pi(s,a)
+```
+
+You sum every state action-value multiplied by the probability of taking that action (given by the policy $`\pi(a|s)`$) to get the state value. If you think of the grid world example, you multiply the probability of (up/down/right/left) with the one step ahead of the state value of (up/down/right/left).
 
 <p align="center">
   <img src="https://static.javatpoint.com/tutorial/reinforcement-learning/images/reinforcement-learning-markov-decision-process.png" >
