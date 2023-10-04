@@ -2,8 +2,6 @@
 
 ## **1. Introduction**
 
-Over the past years, everywhere around the internet — ChatGPT become more and more popular and it is in fact acknowledged that the next decade will be the decade of generative models. ChatGPT could be considered as one of the deep-generative model’s language processing applications. ChatGPT was primarily built upon an improved version of OpenAI’s GPT-3 model known as GPT-3.5. So, what mean by GPT?
-
 The first paper from OpenAI on the GPT models is called `Improving Language Understanding by Generative Pre-Training`. Thus, the term GPT has been derived from Generative Pre-Training Transformer.
 
 `GPT (Generative Pre-trained Transformer)` is a state-of-the-art NLP model that has revolutionized the field of AI. Developed by OpenAI, GPT is part of the Transformer architecture family, and it is specifically designed for tasks related to understanding and generating human language.
@@ -21,30 +19,28 @@ The GPT model has seen multiple versions, each one more powerful and capable tha
 
 GPT models have a wide range of applications in various fields. Here are some of the main applications of GPT models:
 
-- Content creation: GPT models can be used to create high-quality content for various purposes, such as writing articles, generating product descriptions, and creating social media posts.
-- Customer service: GPT models can be used to automate customer service responses by generating human-like text to answer common queries, thus freeing up human customer support agents for more complex issues.
-- Chatbots: GPT models can be used to power chatbots that can converse with users in a natural language, providing assistance, and answering questions.
-- Language translation: GPT models can be used to translate text from one language to another.
-- Search engines: GPT models can be used to improve search engine results by understanding the intent behind the user's query and providing relevant results.
-- Personal assistants: GPT models can be used to create personal assistants that can perform tasks such as scheduling appointments, sending emails, and making phone calls.
+- `Content creation:` GPT models can be used to create high-quality content for various purposes, such as writing articles, generating product descriptions, and creating social media posts.
+- `Customer service:` GPT models can be used to automate customer service responses by generating human-like text to answer common queries, thus freeing up human customer support agents for more complex issues.
+- `Chatbots:` GPT models can be used to power chatbots that can converse with users in a natural language, providing assistance, and answering questions.
+- `Language translation:` GPT models can be used to translate text from one language to another.
+- `Personal assistants:` GPT models can be used to create personal assistants that can perform tasks such as scheduling appointments, sending emails, and making phone calls.
 - ...
 
 These are just a few examples of the many applications of GPT models. As GPT models continue to evolve and improve, we can expect to see even more innovative applications in the future.
 
 ## **2. GPT architecture overview**
 
-In general, all GPT models are based on the Transformer architecture, which was first introduced in 2017 by Google. Each version of GPT have some differences in architecture, but they all share the same basic architecture. So, in this section, we will discuss the basic architecture of the GPT model and with each version of GPT, we will only consider the differences in architecture and training process.
+In general, all GPT models are based on the Transformer architecture, which was first introduced in 2017 by Google. Each version of GPT have some differences, but they all share the same basic architecture. So, in this section, we will discuss the basic architecture of the GPT model and with each version of GPT, we will only consider the differences in architecture and training process.
 
 The following diagram shows the basic architecture of the GPT model:
 
 <p align="center">
-  <img src="https://i.imgur.com/c4Z6PG8.png" style="width: 50%;">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Full_GPT_architecture.png/800px-Full_GPT_architecture.png" style="width: 50%;">
+  <img src="https://i.imgur.com/c4Z6PG8.png">
   <br>
   <i>Basic architecture of the GPT model</i>
 </p>
 
-GPT model use a stack of only Transformer decoder block with masked self-attention to train the model. Each version of GPT have a different number of decoder and additional layer, but the basic component is the same as above image.
+`GPT model use a stack of only Transformer decoder block with masked self-attention to train the model`. Each version of GPT have a different number of decoder and additional layer, but the basic component is the same as above image.
 
 In short, the input sequence is fed into the model, and the model generates the next word in the sequence. This process is repeated until the desired length is reached. The sequence is passed through a stack of Transformer decoder blocks, each of which consists of a multi-head self-attention layer and a feed-forward neural network. The output of the last decoder block is passed through a linear layer and a softmax activation function to generate the next word in the sequence. The detail intuition of this has been discussed in the Transformer section.
 
@@ -57,8 +53,10 @@ The following image is the detail illustration of the GPT-3 architecture with th
 - Window context size: 2048
 - Vocabulary size: 50257
 
+For easily view the image, you can click [here](https://www.canva.com/design/DAFv-ofmLnE/ZepETiJaPa9vTSwUtDyDog/edit?utm_content=DAFv-ofmLnE&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton).
+
 <p align="center">
-  <img src="https://live.staticflickr.com/65535/53225424182_fd3cc521bd_b.jpg" >
+  <img src="https://live.staticflickr.com/65535/53233539339_7fbb13abeb_b.jpg" >
   <br>
   <i>Detail illustration of the GPT-3 architecture</i>
 </p>
@@ -69,8 +67,8 @@ The below table is the detail of implementation of each version of GPT model:
 |-------|---------------------|-------------------------|--------------------------------------------|----------------------------------|---------------------------------------|----------------|-----------------|-----------|
 | GPT-1 | 768      | 12       | 12        | 64   | 512  | 40,000   | BookCorpus        | 117M   |
 | GPT-2 | 768      | 12-48    | 12-48     | 64   | 1024 | 50,257   | WebText           | 1.5B |
-| GPT-3 | 12888    | 96       | 96        | 128  | 2048 | 175B     | CommonCrawl, WebText, English Wikipedia, and two books corpora (Books1 and Books2) | 175B  |
-| GPT-4 | Unknown  | Unknown  | Unknown   | Unknown   | 32768   | Unknown        | Unknown         | In trillions (*)       |
+| GPT-3 | 12888    | 96       | 96        | 128  | 2048 | Unknown     | CommonCrawl, WebText, English Wikipedia, and two books corpora (Books1 and Books2) | 175B  |
+| GPT-4 | Unknown  | Unknown  | Unknown   | Unknown   | 32,768   | Unknown        | Unknown         | In trillions (*)       |
 
 (*) Not official.
 
@@ -82,7 +80,7 @@ GPT-1 uses a `12-layer decoder-only transformer` framework with `masked self-att
 
 Training a GPT model consists of 2 stages:
 
-1. Learning a high-capacity language model on a huge corpus of text (pre-training),
+1. Pre-training, learning a high-capacity language model on a huge corpus of text.
 2. Fine-tuning, where the model is adapted to a discriminative task with labeled data.
 
 #### **2.1.1. Unsupervised pre-training objective**
@@ -103,12 +101,12 @@ Where:
 
 These parameters trained using stochastic gradient descent.
 
-A multi-layer Transoformer decoder model is used, which applies a multi-headed self-attention operation over the input context tokens followed by position-wise feed-forward layers to produce an output distribution over target tokens:
+A multi-layer Transformer decoder model is used, which applies a multi-headed self-attention operation over the input context tokens followed by position-wise feed-forward layers to produce an output distribution over target tokens:
 
 <p align="center">
   <img src="https://live.staticflickr.com/65535/53225687331_d0796540f4_o.png">
   <br>
-  <i>Unsupervised pre-training objective</i>
+  <i>Unsupervised pre-training</i>
 </p>
 
 Where:
@@ -174,13 +172,38 @@ GPT-1 language model was trained using the `BooksCorpus dataset` which consists 
 
 The following is the details of the Unsupervised Pre-training process:
 
-- GELU (Gaussian Error Linear Units) activation function is used.
-- Adam optimizer with a learning rate of 2.5e-4 was used.
-- Byte Pair Encoding vocabulary with 40,000 merges was used.
+- GELU (Gaussian Error Linear Units) activation function is used. The main properties of GELU are:
+  - `Smoothness`: GELU is a smooth function, meaning it’s continuously differentiable, unlike ReLU, which has a discontinuity at zero. The smoothness property can help with gradient-based optimization during training.
+  - `Approximation to Identity`: For small values of x, GELU behaves like the identity function, which allows it to preserve information in the network even for small activations.
+  - Non-Linearity: GELU introduces non-linearity to the network, which is essential for capturing complex relationships in data.
+  - Sigmoid and Tanh Components: GELU uses a combination of the sigmoid and hyperbolic tangent (tanh) functions, which helps it model negative values and gradients effectively.
+  - Normalization: GELU includes a normalization term sqrt(2/pi) to ensure that the outputs have a standard deviation close to 1, which can help stabilize training in deep neural networks.
+  - Read more about GELU: [Khám phá activation function Gelu(Transformers)](https://viblo.asia/p/kham-pha-activation-function-gelutransformers-EoW4og0B4ml) and [Deep Learning: GELU (Gaussian Error Linear Unit) Activation Function](https://aaweg-i.medium.com/deep-learning-gelu-gaussian-error-linear-unit-activation-function-56168dd5997)
+
+<p align="center">
+  <img src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*FkNwBrxFa8HxprWVpGIodg.png">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/ReLU_and_GELU.svg/1232px-ReLU_and_GELU.svg.png">
+  <br>
+  <i>GELU (Gaussian Error Linear Units)</i>
+</p>
+
+- Adam optimizer with a learning rate of 2.5e-4 was used. Read more about Adam optimizer [here](https://viblo.asia/p/optimizer-hieu-sau-ve-cac-thuat-toan-toi-uu-gdsgdadam-Qbq5QQ9E5D8).
+
+- `Byte Pair Encoding` vocabulary with 40,000 merges was used. BPE is a simple form of data compression algorithm in which the most common pair of consecutive bytes of data is replaced with a byte that does not occur in that data. Suppose we have data "aaabdaaabac" which needs to be encoded (compressed).
+  - The byte pair "aa" occurs most often, so we will replace it with Z as Z does not occur in our data. So we now have "ZabdZabac" where Z = "aa".
+  - The next common byte pair is "ab" so replace it with Y. We now have "ZYdZYac" where Z = "aa" and Y = "ab".
+  - The only byte pair left is "ac" which appears as just one so we will not encode it.
+  - We can use recursive byte pair encoding to encode ZY as X. Our data has now transformed into "XdXac" where X = ZY, Y = "ab", and Z = "aa". It cannot be further compressed as there are no byte pairs appearing more than once.
+  - We decompress the data by performing replacements in reverse order.
+
 - The 3072-dimensional state was employed for the position-wise feed-forward layer.
+
 - The 12-layered model used 12 attention heads in each self-attention layer.
+
 - The tokens were encoded into word embeddings using a 768-dimensional state in the model.
-- Attention, residual, and embedding dropouts were used for regularisation, with a dropout rate of 0.1. A customized version of L2 regularisation was also used for non-bias weights.
+
+- Residual, and embedding dropouts were used for regularisation, with a dropout rate of 0.1. A customized version of L2 regularisation was also used for non-bias weights.
+
 - The model was trained over 100 epochs on mini-batches of size 64 and a sequence length of 512. The model had 117M parameters.
 
 #### **2.2.2. Fine-tuning**
@@ -217,6 +240,12 @@ GPT-2 had 1.5 billion parameters, which was 10 times more than GPT-1 (117M param
 
 The authors trained four language models with 117M (same as GPT-1), 345M, 762M and 1.5B (GPT-2) parameters. Each subsequent model had lower perplexity than previous one. This established that the perplexity of language models on same dataset decreases with an increase in the number of parameters. Also, the model with the highest number of parameters performed better on every downstream task.
 
+<p align="center">
+  <img src="https://live.staticflickr.com/65535/53232357837_f1da5d476e_o.png">
+  <br>
+  <i>Details of variants of the GPT-2 model</i>
+</p>
+
 ## **4. GPT-3**
 
 In the try to build very strong and powerful language models which would need no fine-tuning and only few demonstrations to understand tasks and perform them, Open AI built the GPT-3 model with 175 billion parameters which had 100 times more parameters than GPT-2.
@@ -242,6 +271,20 @@ The architecture of GPT-3 is same as GPT-2. Few major differences from GPT-2 are
 - Context window size was increased from 1024 for GPT-2 to 2048 tokens for GPT-3.
 - Adam optimiser was used with β_1 = 0.9, β_2 = 0.95 and ε = 10^(-8).
 - Alternating dense and locally banded sparse attention patterns were used.
+
+There are several GPT-3 examples and variants in terms of:
+
+- Sizes (Parameters and Layers)
+- Architectures
+- Learning hyper-parameters (batch size in tokens and learning rate)
+
+Here are the details of the different variants of GPT-3 model:
+
+<p align="center">
+  <img src="https://www.sigmoid.com/wp-content/uploads/2022/12/sigmoid_gpt-3_details.png">
+  <br>
+  <i>Details of variants of the GPT-3 model</i>
+</p>
 
 ### **4.4. Reinforcement Learning from Human Feedback**
 
