@@ -268,6 +268,14 @@ There are two types of reinforcement learning methods: positive and negative.
   <i>Final result</i>
 </p>
 
+The above Bellman equation maybe cause some confusion for the agent because it only consider the immediate reward. So, we need to use the Bellman Optimality Equation.
+
+```math
+V(s) = max_{a}(R(s, a) + γ\sum_{s'}P(s,a,s')V(s'))
+```
+
+Where $`P(s,a,s')`$ is the probability of transitioning from state s to s' with action a.
+
 ## **9. Markov Decision Process**
 
 ### **9.1 What is Markov Decision Process?**
@@ -284,10 +292,12 @@ There are two types of reinforcement learning methods: positive and negative.
   - $`R(s, s', a) \in \mathbb{R}`$ is the immediate reward after going from state s to s' with action a.
   - $`\gamma`$ is the discount factor, which determines how much the agent cares about rewards in the long-term future or in the short–term future. It has a value between 0 and 1. Lower value encourages short–term rewards while higher value promises long-term reward.
 
+The agent moves from state to state by observing the environment, taking actions, and receiving rewards at every step. The rewards could be represented as $`R_t, R_{t+1}, R_{t+2},…+R_{t+n-1}`$ at every time-step t and the agent may achieve its final goal in the n-th step.
+
 Now, we have $`G_t`$ is the total discounted reward from time-step t, opposite to the total reward $`R_t`$ which is an immediate return.
 
 ```math
-G_t=\sum_{k=0}^{\infty}\gamma^kR_{t+k+1}
+G_t=\sum_{k=0}^{\infty}\gamma^kR_{t+k} = R_t+\gamma R_{t+1}+\gamma^2R_{t+2}+\gamma^3R_{t+3}+…
 ```
 
 $`V^\pi(s)`$ is the "state" value function of an MDP (Markov Decision Process). It's the expected return starting from state s, and then following policy π.
