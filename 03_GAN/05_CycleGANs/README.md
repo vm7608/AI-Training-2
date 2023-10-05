@@ -210,6 +210,7 @@ To training process stable, authors replace the negative log likelihood function
 
 <p align="center">
   <img src="https://miro.medium.com/v2/resize:fit:640/format:webp/1*o7AV9LF_pdB9JdfVZlpmAQ.png" >
+  <br>
   <img src="https://miro.medium.com/v2/resize:fit:640/format:webp/1*uQmCNGYsJsvc9n9d-VqBjg.png" >
   <br>
   <i>Least-square Adversarial Loss</i>
