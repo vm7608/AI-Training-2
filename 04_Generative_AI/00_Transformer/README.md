@@ -340,6 +340,9 @@ The following steps repeat the process until a special symbol is reached indicat
 <p align="center">
   <img src="http://jalammar.github.io/images/t/transformer_decoding_1.gif" >
   <br>
+</p>
+
+<p align="center">
   <img src="http://jalammar.github.io/images/t/transformer_decoding_2.gif" >
   <br>
   <i>After finishing the encoding phase, we begin the decoding phase. Each step in the decoding phase outputs an element from the output sequence (the English translation sentence in this case).</i>
