@@ -101,19 +101,19 @@ There are two process of training in the cycleGAN. Thus, there are also exist tw
 - Start from $`x`$, we try to generate fake image $`\hat{y}=G(x)`$:
 
 ```math
-\mathcal{L}_{GAN}(G, D_{X} , X, Y ) = \mathbb{E}_{y\sim p_{data}(y)}
-[\log D_{X} (y)]
+\mathcal{L}_{GAN}(G, D_{Y} , X, Y ) = \mathbb{E}_{y\sim p_{data}(y)}
+[\log D_{Y} (y)]
 + \mathbb{E}_{x \sim p_{data}(x)}
-[\log(1 − D_{X} (G(x)))]
+[\log(1 − D_{Y} (G(x)))]
 ```
 
 - And in the revert direction, start from $`y`$, we try to generate fake image $`\hat{x}=F(y)`$:
 
 ```math
-\mathcal{L}_{GAN}(F, D_{Y} , X, Y ) = \mathbb{E}_{x\sim p_{data}(x)}
-[\log D_{Y} (x)]
+\mathcal{L}_{GAN}(F, D_{X} , Y, X ) = \mathbb{E}_{x\sim p_{data}(x)}
+[\log D_{X} (x)]
 + \mathbb{E}_{y \sim p_{data}(y)}
-[\log(1 − D_{Y} (F(y)))]
+[\log(1 − D_{X} (F(y)))]
 ```
 
 In the above equations, 2 generators $`G`$ and $`F`$ are trained to minimize the adversarial loss while 2 discriminators $`D_{X}`$ and $`D_{Y}`$ are trained to maximize the adversarial loss.
@@ -207,6 +207,13 @@ To training process stable, authors replace the negative log likelihood function
 ```math
 \mathbb{E}_{x \sim p_{data}(x)}[\log(1 − D_{Y} (G(x)))] \to \mathbb{E}_{x \sim p_{data}(x)}[(1 − D_{Y} (G(x)))^2]
 ```
+
+<p align="center">
+  <img src="https://miro.medium.com/v2/resize:fit:640/format:webp/1*o7AV9LF_pdB9JdfVZlpmAQ.png" >
+  <img src="https://miro.medium.com/v2/resize:fit:640/format:webp/1*uQmCNGYsJsvc9n9d-VqBjg.png" >
+  <br>
+  <i>Least-square Adversarial Loss</i>
+</p>
 
 In emperical, this way is more efficient when generate image with high quality.
 
