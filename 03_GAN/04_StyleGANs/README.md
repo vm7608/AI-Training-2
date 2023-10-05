@@ -91,9 +91,9 @@ The process of adding a new block of layers involves the usage of *skip connecti
 
 The authors observe that a potential benefit of the ProGAN progressive layers is their ability to control different visual features of the image, if utilized properly. The lower the layer (and the resolution), the coarser the features it affects. The paper divides the features into three types:
 
-- Coarse - resolution of up to 82 - affects pose, general hair style, face shape, etc
-- Middle - resolution of 162 to 322 - affects finer facial features, hair style, eyes open/closed, etc.
-- Fine - resolution of 642 to 10242 - affects color scheme (eye, hair and skin) and micro features.
+- Coarse - resolution of up to 8x8 - affects pose, general hair style, face shape, etc
+- Middle - resolution of 16x16 to 32x32 - affects finer facial features, hair style, eyes open/closed, etc.
+- Fine - resolution of 64x64 to 1024x1024 - affects color scheme (eye, hair and skin) and micro features.
 
 ### **2.2. Addition of Tuning and Bilinear Upsampling**
 
@@ -177,6 +177,8 @@ Though it doesn’t improve the model performance on all datasets, this concept 
   <br>
   <i>Style mixing results with different crossover points applied.</i>
 </p>
+
+Mixing regularization involves first generating two style vectors from the mapping network. A split point in the synthesis network is chosen and all AdaIN operations prior to the split point use the first style vector and all AdaIN operations after the split point get the second style vector. This encourages the layers and blocks to localize the style to specific parts of the model and corresponding level of detail in the generated image.
 
 Here we can see the impact of the crossover point (different resolutions) on the resulting image:
 
